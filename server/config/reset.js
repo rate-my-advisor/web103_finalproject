@@ -60,16 +60,18 @@ const resetDatabase = async () => {
         `);
 
         // reviews connected to exisitng advisor/student
-        // should we include CHECK's? like CHECK (overall_rating BETWEEN 1 AND 5)
         // for now removed NOT NULL from student_id bc we don't have accounts yet
         await client.query(`
             CREATE TABLE reviews (
                 review_id SERIAL PRIMARY KEY,
                 advisor_id INTEGER NOT NULL,
                 student_id INTEGER,
-                overall_rating INTEGER NOT NULL,
-                communication_rating INTEGER NOT NULL,
-                availability_rating INTEGER NOT NULL,
+                overall_rating INTEGER NOT NULL
+                    CHECK (overall_rating BETWEEN 1 AND 5),
+                communication_rating INTEGER NOT NULL
+                    CHECK (overall_rating BETWEEN 1 AND 5),
+                availability_rating INTEGER NOT NULL
+                    CHECK (overall_rating BETWEEN 1 AND 5),
                 comment TEXT,
                 would_recommend BOOLEAN NOT NULL,
                 review_date DATE NOT NULL DEFAULT CURRENT_DATE,
