@@ -70,50 +70,7 @@ const getAdvisorsByUniversity = async (req, res) => {
     }
 };
 
-const createUniversity = async (req, res) => {
-    try {
-        const { name, department } = req.body;
-
-        if (
-            typeof name !== "string" ||
-            !name.trim() ||
-            typeof department !== "string" ||
-            !department.trim()
-        ) {
-            return res.status(400).json({
-                message: "name and department are required",
-            });
-        }
-
-        const results = await pool.query(
-            `
-                INSERT INTO universities (
-                name,
-                department
-                )
-                VALUES ($1, $2)
-                RETURNING *
-            `,
-            [
-                name.trim(),
-                department.trim(),
-            ],
-        );
-
-        return res.status(201).json(results.rows[0]);
-    } catch (err) {
-        console.error(err);
-
-        return res.status(500).json({
-            message: "Unable to create university",
-        });
-    }
-};
-
-// update and delete???
-
 export default {
   getUniversities,
-  getAdvisorsByUniversity,
-  createUniversity,
+  getAdvisorsByUniversity
 };

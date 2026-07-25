@@ -8,9 +8,11 @@ import { pool } from "./database.js";
 
 const resetDatabase = async () => {
     // ask pool for available db connection, store in client variable
-    const client = await pool.connect();
+    let client
 
     try {
+        client = await pool.connect()
+
         // BEGIN line treats all following queries as one operation
         await client.query("BEGIN");
 
@@ -58,6 +60,7 @@ const resetDatabase = async () => {
         `);
 
         // reviews connected to exisitng advisor/student
+        // should we include CHECK's? like CHECK (overall_rating BETWEEN 1 AND 5)
         await client.query(`
             CREATE TABLE reviews (
                 review_id SERIAL PRIMARY KEY,
@@ -88,15 +91,21 @@ const resetDatabase = async () => {
         console.log("✅ reviews table created");
         console.log("ℹ️ Tables are empty and ready for user input");
     } catch (error) {
-        // ROLLBACK means failed, undo everything since BEGIN line
-        await client.query("ROLLBACK");
-        console.error("⚠️ Error resetting database:", error);
+        if (client) {
+            // ROLLBACK means failed, undo everything since BEGIN line
+            await client.query("ROLLBACK")
+        }
+
+        console.error("⚠️ Error resetting database:", error)
     } finally {
-        // return the specific db connection back to pool
-        client.release();
+        if (client) {
+            // return the specific db connection back to pool
+            client.release();
+        }
+        
         // shut down the entire connection pool (for resource cleanup and efficiency)
         await pool.end();
     }
 };
 
-resetDatabase();
+resetDatabase()
