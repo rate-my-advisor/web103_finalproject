@@ -3,7 +3,7 @@ import reviewController from "../controllers/reviewController.js"
 
 const router = express.Router()
 
-router.get("/advisor/:advisorId", reviewController.getReviewsByAdvisor)
+router.get("/:advisorId", reviewController.getReviewsByAdvisor)
 
 router.post("/", reviewController.createReview)
 router.delete("/:reviewId", reviewController.deleteReview)
