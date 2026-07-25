@@ -179,6 +179,22 @@ const updateReview = async (req, res) => {
             would_recommend,
         } = req.body;
 
+        // reject empty request body
+        const noFieldsProvided =
+            advisor_id === undefined &&
+            student_id === undefined &&
+            overall_rating === undefined &&
+            communication_rating === undefined &&
+            availability_rating === undefined &&
+            comment === undefined &&
+            would_recommend === undefined
+
+        if (noFieldsProvided) {
+            return res.status(400).json({
+                message: "At least one field must be provided"
+            })
+        }
+
         const advisorId =
             advisor_id === undefined
                 ? null
