@@ -69,12 +69,15 @@ const resetDatabase = async () => {
                 overall_rating INTEGER NOT NULL
                     CHECK (overall_rating BETWEEN 1 AND 5),
                 communication_rating INTEGER NOT NULL
-                    CHECK (overall_rating BETWEEN 1 AND 5),
+                    CHECK (communication_rating BETWEEN 1 AND 5),
                 availability_rating INTEGER NOT NULL
-                    CHECK (overall_rating BETWEEN 1 AND 5),
+                    CHECK (availability_rating BETWEEN 1 AND 5),
                 comment TEXT,
                 would_recommend BOOLEAN NOT NULL,
                 review_date DATE NOT NULL DEFAULT CURRENT_DATE,
+                likes INTEGER NOT NULL DEFAULT 0
+                    CHECK (likes >= 0),
+                reported BOOLEAN NOT NULL DEFAULT FALSE,
 
                 FOREIGN KEY (advisor_id)
                     REFERENCES advisors(advisor_id),

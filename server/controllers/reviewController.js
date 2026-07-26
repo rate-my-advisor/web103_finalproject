@@ -49,6 +49,8 @@ const createReview = async (req, res) => {
             availability_rating,
             comment,
             would_recommend,
+            likes,
+            reported
         } = req.body;
 
         const advisorId = Number(advisor_id);
@@ -118,9 +120,11 @@ const createReview = async (req, res) => {
                     communication_rating,
                     availability_rating,
                     comment,
-                    would_recommend
+                    would_recommend,
+                    likes,
+                    reported
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 RETURNING *
             `,
             [
@@ -131,6 +135,8 @@ const createReview = async (req, res) => {
                 availabilityRating,
                 comment?.trim() || null,
                 would_recommend,
+                likes,
+                reported
             ],
         );
 
@@ -177,6 +183,8 @@ const updateReview = async (req, res) => {
             availability_rating,
             comment,
             would_recommend,
+            likes,
+            reported
         } = req.body;
 
         // reject empty request body
@@ -294,8 +302,10 @@ const updateReview = async (req, res) => {
                     communication_rating = COALESCE($4, communication_rating),
                     availability_rating = COALESCE($5, availability_rating),
                     comment = COALESCE($6, comment),
-                    would_recommend = COALESCE($7, would_recommend)
-                WHERE review_id = $8
+                    would_recommend = COALESCE($7, would_recommend),
+                    likes = COALESCE($8, likes),
+                    reported = COALESCE($9, reported)
+                WHERE review_id = $10
                 RETURNING *
             `,
             [
@@ -305,12 +315,14 @@ const updateReview = async (req, res) => {
                 communicationRating,
                 availabilityRating,
                 comment === undefined || comment === null
-                ? null
-                : comment.trim(),
+                    ? null
+                    : comment.trim(),
                 would_recommend === undefined
-                ? null
-                : would_recommend,
+                    ? null
+                    : would_recommend,
                 reviewId,
+                likes,
+                reported
             ],
         );
 
