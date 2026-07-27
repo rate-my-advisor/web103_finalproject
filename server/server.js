@@ -2,6 +2,7 @@ import express from 'express'
 import path from 'path'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import favicon from 'serve-favicon'
 
 // import the router from your routes file
 import advisorRoutes from "./routes/advisorRoutes.js";
@@ -27,19 +28,19 @@ else if (process.env.NODE_ENV === 'production') {
 }
 
 // specify the api path for the server to use
-app.use("/advisors", advisorRoutes);
-app.use("/reviews", reviewRoutes);
-app.use("/universities", universityRoutes);
+app.use("/api/advisors", advisorRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/universities", universityRoutes);
 
 // 404 handler if no route is matched
-app.use("/", (req, res) => {
+app.use("/api", (req, res) => {
     res.status(404).json({
         message: "API route not found",
     });
 });
 
 if (process.env.NODE_ENV === 'production') {
-    app.get('/*', (_, res) =>
+    app.get(/.*/, (_, res) =>
         res.sendFile(path.resolve('public', 'index.html'))
     )
 }
