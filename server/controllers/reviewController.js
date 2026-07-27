@@ -20,9 +20,10 @@ const getReviewsByAdvisor = async (req, res) => {
         // most recent reviews first displayed on top of page
         const results = await pool.query(
             `
-                SELECT *
-                FROM reviews
-                WHERE advisor_id = $1
+                SELECT r.*, COALESCE(s.username, 'Anonymous') AS username
+                FROM reviews r
+                LEFT JOIN students s on r.student_id = s.student_id
+                WHERE r.advisor_id = $1
                 ORDER BY review_date DESC, review_id DESC
             `,
             [advisorId],

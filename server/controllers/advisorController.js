@@ -122,6 +122,17 @@ const createAdvisor = async (req, res) => {
             }
         }
 
+        // validate office
+        if (
+            office !== undefined &&
+            office !== null &&
+            typeof office !== "string"
+        ) {
+            return res.status(400).json({
+                message: "office must be a string"
+            })
+        }
+
         // pull one specific connection from pool
         client = await pool.connect()
 
@@ -167,17 +178,6 @@ const createAdvisor = async (req, res) => {
 
             // put university_id into universityId
             universityId = universityResults.rows[0].university_id
-        }
-
-        // validate office
-        if (
-            office !== undefined &&
-            office !== null &&
-            typeof office !== "string"
-        ) {
-            return res.status(400).json({
-                message: "office must be a string"
-            })
         }
 
         const advisorResults = await client.query(
