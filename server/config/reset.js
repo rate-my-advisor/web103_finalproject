@@ -53,6 +53,7 @@ const resetDatabase = async () => {
                 email VARCHAR(255) NOT NULL UNIQUE,
                 department VARCHAR(255) NOT NULL,
                 office VARCHAR(255),
+                rating DECIMAL(3, 2)
 
                 FOREIGN KEY (university_id)
                     REFERENCES universities(university_id)
@@ -87,6 +88,44 @@ const resetDatabase = async () => {
             );
         `);
 
+        // Create trigger to recalculate advisor rating on update
+        await client.query(`
+            CREATE OR REPLACE FUNCTION update_advisor_rating()
+            RETURNS TRIGGER AS $$
+            DECLARE
+                target_advisor_id INT;
+            BEGIN
+                -- Identify which advisor was affected based on the operation type
+                IF (TG_OP = 'DELETE') THEN
+                    target_advisor_id := OLD.advisor_id;
+                ELSE
+                    target_advisor_id := NEW.advisor_id;
+                END IF;
+
+                -- Recalculate average rating for that advisor
+                UPDATE advisors
+                SET rating = (
+                    SELECT ROUND(AVG(overall_rating)::numeric, 2)
+                    FROM reviews
+                    WHERE id = target_advisor_id
+                )
+                WHERE advisorid = target_advisor_id;
+
+                RETURN NULL; -- AFTER triggers return NULL
+            END;
+            $$ LANGUAGE plpgsql;
+        `);
+
+        // Attach the trigger to the reviews table
+        await client.query(`
+            DROP TRIGGER IF EXISTS trigger_update_advisor_rating ON reviews;
+
+            CREATE TRIGGER trigger_update_advisor_rating
+            AFTER INSERT OR UPDATE OR DELETE ON reviews
+            FOR EACH ROW
+            EXECUTE FUNCTION update_advisor_rating();
+        `);
+
         // COMMIT means every query succeeded, so save all changes
         await client.query("COMMIT");
 
@@ -108,7 +147,7 @@ const resetDatabase = async () => {
             // return the specific db connection back to pool
             client.release();
         }
-        
+
         // shut down the entire connection pool (for resource cleanup and efficiency)
         await pool.end();
     }

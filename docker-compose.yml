@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  # Web application service connecting to Render hosted PostgreSQL
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ratemyadvisor_web
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    environment:
+      PORT: 3000
+      NODE_ENV: production
