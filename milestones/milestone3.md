@@ -8,7 +8,7 @@ This unit, be sure to complete all tasks listed below. To complete a task, place
 
 You will need to reference the GitHub Project Management guide in the course portal for more information about how to complete each of these steps.
 
-- [ ] In your repo, create a project board.
+- [x] In your repo, create a project board.
   - *Please be sure to share your project board with the grading team's GitHub **codepathreview**. This is separate from your repository's sharing settings.*
 - [x] In your repo, create at least 5 issues from the features on your feature list.
   - List the title of each issue you created:
@@ -18,7 +18,7 @@ You will need to reference the GitHub Project Management guide in the course por
     4. Add page for student to fill out ratings and reviews for the advisor
     5. Add a report button next to all student comments
     6. Set up and validate the backend
-- [ ] In your repo, update the status of issues in your project board.
+- [x] In your repo, update the status of issues in your project board.
 - [ ] In your repo, create a GitHub Milestone for each final project unit, corresponding to each of the 5 milestones in your `milestones/` directory.
   - List the name of each milestone you created:
     1.

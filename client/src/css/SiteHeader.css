@@ -1,0 +1,32 @@
+.site-header {
+  display: flex;
+  align-items: center;
+  min-height: 90px;
+  padding: 0 2rem;
+  background: #30377d;
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: white;
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+.site-brand strong {
+  color: #56f0d5;
+  font-weight: 500;
+}
+
+.site-logo {
+  display: grid;
+  width: 3.1rem;
+  height: 3.1rem;
+  place-items: center;
+  background: #56f0d5;
+  color: #30377d;
+  font-size: 1.3rem;
+  font-weight: 800;
+}

@@ -1,25 +1,18 @@
-import React from 'react'
-import { useRoutes } from 'react-router-dom'
-import ViewAdvisor from './pages/ViewAdvisor'
-import './App.css'
+import { useRoutes } from "react-router-dom";
+import ViewAdvisor from "./pages/ViewAdvisor";
+import UniversityAdvisors from "./pages/UniversityAdvisors";
+import "./App.css";
 
 const App = () => {
-  let element = useRoutes([
-    // {
-    //   path: '/',
-    //   element: <Home title='' />
-    // },
+  const element = useRoutes([
     {
-      path:'/advisor/:id',
-      element: <ViewAdvisor/>
-    }
-  ])
+      path: "/university/:universityName/advisors",
+      element: <UniversityAdvisors />,
+    },
+    { path: "/advisor/:id", element: <ViewAdvisor /> },
+  ]);
 
-  return (
-    <div className='app'>
-      { element }
-    </div>
-  )
-}
+  return <div className="app">{element}</div>;
+};
 
-export default App
+export default App;
