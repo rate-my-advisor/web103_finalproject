@@ -107,9 +107,9 @@ const resetDatabase = async () => {
                 SET rating = (
                     SELECT ROUND(AVG(overall_rating)::numeric, 2)
                     FROM reviews
-                    WHERE id = target_advisor_id
+                    WHERE advisor_id = target_advisor_id
                 )
-                WHERE advisorid = target_advisor_id;
+                WHERE advisor_id = target_advisor_id;
 
                 RETURN NULL; -- AFTER triggers return NULL
             END;
