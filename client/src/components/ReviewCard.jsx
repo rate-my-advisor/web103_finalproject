@@ -34,7 +34,7 @@ const ReviewCard = ({ review }) => {
     availability_rating,
     comment,
     would_recommend,
-    datetime_unix,
+    review_date,
   } = review;
 
   const formattedDate = new Date(review_date).toLocaleDateString(undefined, {

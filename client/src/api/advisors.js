@@ -16,7 +16,7 @@ async function request(path) {
 
 export function getAdvisorsByUniversity(universityId) {
   return request(
-    `/api/universities/${encodeURIComponent(universityName)}/advisors`,
+    `/api/universities/${universityId}/advisors`,
   );
 }
 
