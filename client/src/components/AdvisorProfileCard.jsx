@@ -1,3 +1,5 @@
+import "../css/AdvisorProfileCard.css";
+
 const AdvisorProfileCard = ({ advisor }) => {
   if (!advisor) return null;
 

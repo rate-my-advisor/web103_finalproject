@@ -1,3 +1,5 @@
+import "../css/AdvisorRatingCard.css";
+
 const StarRating = ({ rating }) => {
   return (
     <div className="star-rating">
