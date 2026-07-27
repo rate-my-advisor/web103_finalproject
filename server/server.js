@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use(favicon(path.resolve('../', 'client', 'public', 'lightning.png')))
 }
 else if (process.env.NODE_ENV === 'production') {
-    app.use(favicon(path.resolve('public', 'lightning.png')))
+    app.use(favicon(path.resolve('../', 'client', 'public', 'lightning.png')))
     app.use(express.static('public'))
 }
 
@@ -40,7 +40,7 @@ app.use("/", (req, res) => {
 });
 
 if (process.env.NODE_ENV === 'production') {
-    app.get('/*', (_, res) =>
+    app.get('/*path', (_, res) =>
         res.sendFile(path.resolve('public', 'index.html'))
     )
 }
