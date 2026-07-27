@@ -1,5 +1,6 @@
 import express from 'express'
 import path from 'path'
+import fs from 'fs'
 import favicon from 'serve-favicon'
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -19,11 +20,17 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-if (process.env.NODE_ENV === 'development') {
-    app.use(favicon(path.resolve('../', 'client', 'public', 'lightning.png')))
+// Favicon resolution
+const devFavicon = path.resolve('../', 'client', 'public', 'lightning.png')
+const prodFavicon = path.resolve('public', 'lightning.png')
+
+if (fs.existsSync(devFavicon)) {
+    app.use(favicon(devFavicon))
+} else if (fs.existsSync(prodFavicon)) {
+    app.use(favicon(prodFavicon))
 }
-else if (process.env.NODE_ENV === 'production') {
-    app.use(favicon(path.resolve('../', 'client', 'public', 'lightning.png')))
+
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static('public'))
 }
 
