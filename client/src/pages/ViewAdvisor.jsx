@@ -5,21 +5,39 @@ import { getAdvisorById } from "../api/advisors";
 import "../css/ViewAdvisor.css";
 
 const ViewAdvisor = () => {
-  const { id } = useParams();
+  const rawId = Number(useParams().id) || null;;
   const [advisor, setAdvisor] = useState(null);
   const [error, setError] = useState("");
 
+  // Safely parse to number
+  const id = Number(rawId);
+  const isValidId = Boolean(rawId) && !Number.isNaN(id);
+
   useEffect(() => {
+    if (!isValidId) return;
+
     const loadAdvisor = async () => {
       try {
         setAdvisor(await getAdvisorById(id));
-      } catch {
-        setError("This advisor could not be found.");
+      } catch (error) {
+        setError(error.message);
       }
     };
-
     loadAdvisor();
-  }, [id]);
+  }, [id, isValidId]);
+
+  // Id not a number
+  if (!isValidId) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="container">
+          <h1>Invalid id</h1>
+          <Link to="/">Return home</Link>
+        </main>
+      </>
+    )
+  };
 
   if (error) {
     return (
@@ -34,8 +52,16 @@ const ViewAdvisor = () => {
   }
 
   if (!advisor) {
-    return <p>Loading advisor…</p>;
+    return (
+      <>
+        <SiteHeader />
+        <main className="container">
+          <p>Loading advisor…</p>;
+        </main>
+      </>
+    )
   }
+  console.log(advisor)
 
   return (
     <>
@@ -43,12 +69,12 @@ const ViewAdvisor = () => {
       <main className="container">
         <section className="summary">
           <div>
-            <h1>{advisor.name}</h1>
-            <p>{advisor.specialty}</p>
+            <h1>{`${advisor.first_name} ${advisor.last_name}`}</h1>
             <p>{advisor.department}</p>
-            <p>{advisor.university}</p>
+            <p>{advisor.email}</p>
+            <p>{advisor.university_name}</p>
+            {advisor.office && <p>{advisor.office}</p>}
           </div>
-
           <strong className="rating-card">{advisor.rating} / 5</strong>
         </section>
       </main>

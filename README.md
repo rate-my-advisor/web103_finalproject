@@ -66,9 +66,9 @@ Report button for review on foul and abusive language
 
 [gif goes here]
 
-### (7) Letter grades are applied on advisors overall ratings for quick student viewing
+### (7) Average grades are applied on advisors overall ratings for quick student viewing
 
-Students can search for good advisors quickly by viewing the letter grade given to each advisor based on their overall ratings (e.g. A+, A, A-, B+, etc.).
+Students can search for good advisors quickly by viewing the average grade given to each advisor based on their overall ratings (rounded to the nearest tenth place).
 
 [gif goes here]
 

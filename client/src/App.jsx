@@ -6,7 +6,7 @@ import "./App.css";
 const App = () => {
   const element = useRoutes([
     {
-      path: "/university/:universityName/advisors",
+      path: "/university/:universityId/advisors",
       element: <UniversityAdvisors />,
     },
     { path: "/advisor/:id", element: <ViewAdvisor /> },
