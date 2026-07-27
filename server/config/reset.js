@@ -53,7 +53,7 @@ const resetDatabase = async () => {
                 email VARCHAR(255) NOT NULL UNIQUE,
                 department VARCHAR(255) NOT NULL,
                 office VARCHAR(255),
-                rating DECIMAL(3, 2)
+                rating DECIMAL(3, 2),
 
                 FOREIGN KEY (university_id)
                     REFERENCES universities(university_id)

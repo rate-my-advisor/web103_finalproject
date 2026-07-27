@@ -23,3 +23,7 @@ export function getAdvisorsByUniversity(universityId) {
 export function getAdvisorById(advisorId) {
   return request(`/api/advisors/${advisorId}`);
 }
+
+export function getReviewsByAdvisor(advisorId) {
+  return request(`/api/reviews/advisor/${advisorId}`)
+}

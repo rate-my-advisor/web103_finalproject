@@ -1,12 +1,14 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
-import { getAdvisorById } from "../api/advisors";
+import ReviewCard from "../components/ReviewCard.jsx";
+import { getAdvisorById, getReviewsByAdvisor } from "../api/advisors";
 import "../css/ViewAdvisor.css";
 
 const ViewAdvisor = () => {
-  const rawId = Number(useParams().id) || null;;
+  const rawId = Number(useParams().id) || null;
   const [advisor, setAdvisor] = useState(null);
+  const [reviews, setReviews] = useState([])
   const [error, setError] = useState("");
 
   // Safely parse to number
@@ -18,7 +20,12 @@ const ViewAdvisor = () => {
 
     const loadAdvisor = async () => {
       try {
-        setAdvisor(await getAdvisorById(id));
+        const [advisor, reviews] = await Promise.all([
+          getAdvisorById(id),
+          getReviewsByAdvisor(id)
+        ])
+        setAdvisor(advisor);
+        setReviews(reviews)
       } catch (error) {
         setError(error.message);
       }
@@ -56,7 +63,7 @@ const ViewAdvisor = () => {
       <>
         <SiteHeader />
         <main className="container">
-          <p>Loading advisor…</p>;
+          <p>Loading advisor…</p>
         </main>
       </>
     )
@@ -76,6 +83,13 @@ const ViewAdvisor = () => {
             {advisor.office && <p>{advisor.office}</p>}
           </div>
           <strong className="rating-card">{advisor.rating} / 5</strong>
+        </section>
+
+        <section className="reviews">
+          <h2>Reviews</h2>
+          {reviews.map((review, index) => (
+            <ReviewCard key={index} review={review} />
+          ))}
         </section>
       </main>
     </>
