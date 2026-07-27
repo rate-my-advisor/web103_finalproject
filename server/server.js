@@ -28,9 +28,9 @@ else if (process.env.NODE_ENV === 'production') {
 }
 
 // specify the api path for the server to use
-app.use("/advisors", advisorRoutes);
-app.use("/reviews", reviewRoutes);
-app.use("/universities", universityRoutes);
+app.use("/api/advisors", advisorRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/universities", universityRoutes);
 
 // 404 handler if no route is matched
 app.use("/", (req, res) => {
