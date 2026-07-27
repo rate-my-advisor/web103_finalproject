@@ -2,13 +2,15 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
 import ReviewCard from "../components/ReviewCard.jsx";
+import AdvisorProfileCard from "../components/AdvisorProfileCard.jsx";
+import AdvisorRatingCard from "../components/AdvisorRatingCard.jsx";
 import { getAdvisorById, getReviewsByAdvisor } from "../api/advisors";
 import "../css/ViewAdvisor.css";
 
 const ViewAdvisor = () => {
   const rawId = Number(useParams().id) || null;
   const [advisor, setAdvisor] = useState(null);
-  const [reviews, setReviews] = useState([])
+  const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
 
   // Safely parse to number
@@ -22,10 +24,10 @@ const ViewAdvisor = () => {
       try {
         const [advisor, reviews] = await Promise.all([
           getAdvisorById(id),
-          getReviewsByAdvisor(id)
-        ])
+          getReviewsByAdvisor(id),
+        ]);
         setAdvisor(advisor);
-        setReviews(reviews)
+        setReviews(reviews);
       } catch (error) {
         setError(error.message);
       }
@@ -43,8 +45,8 @@ const ViewAdvisor = () => {
           <Link to="/">Return home</Link>
         </main>
       </>
-    )
-  };
+    );
+  }
 
   if (error) {
     return (
@@ -66,30 +68,27 @@ const ViewAdvisor = () => {
           <p>Loading advisor…</p>
         </main>
       </>
-    )
+    );
   }
-  console.log(advisor)
 
   return (
     <>
       <SiteHeader />
       <main className="container">
-        <section className="summary">
-          <div>
-            <h1>{`${advisor.first_name} ${advisor.last_name}`}</h1>
-            <p>{advisor.department}</p>
-            <p>{advisor.email}</p>
-            <p>{advisor.university_name}</p>
-            {advisor.office && <p>{advisor.office}</p>}
-          </div>
-          <strong className="rating-card">{advisor.rating} / 5</strong>
+        <section className="summary-section">
+          <AdvisorProfileCard advisor={advisor} />
+          <AdvisorRatingCard advisor={advisor} reviews={reviews} />
         </section>
 
         <section className="reviews">
           <h2>Reviews</h2>
-          {reviews.map((review, index) => (
-            <ReviewCard key={index} review={review} />
-          ))}
+          {reviews.length === 0 ? (
+            <p className="no-reviews-msg">No reviews written for this advisor yet.</p>
+          ) : (
+            reviews.map((review, index) => (
+              <ReviewCard key={index} review={review} />
+            ))
+          )}
         </section>
       </main>
     </>
@@ -97,3 +96,4 @@ const ViewAdvisor = () => {
 };
 
 export default ViewAdvisor;
+
