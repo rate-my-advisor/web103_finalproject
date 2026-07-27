@@ -1,61 +1,50 @@
-import cors from "cors";
-import express from "express";
+import express from 'express'
+import path from 'path'
+import favicon from 'serve-favicon'
+import dotenv from 'dotenv'
+import cors from 'cors'
+
+// import the router from your routes file
+import advisorRoutes from "./routes/advisorRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+import universityRoutes from "./routes/universityRoutes.js";
+
+dotenv.config()
+
+const PORT = process.env.PORT || 3000
 
 const app = express();
-const port = 3001;
 
-app.use(cors());
+// middleware
 app.use(express.json());
+app.use(cors());
 
-const advisors = [
-  {
-    id: 1,
-    name: "Aisha Patel",
-    university: "New York University",
-    specialty: "Computer Science",
-    department: "Tandon School of Engineering",
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    name: "Daniel Kim",
-    university: "New York University",
-    specialty: "Pre-Health",
-    department: "College of Arts and Science",
-    rating: 4.5,
-  },
-  {
-    id: 3,
-    name: "Maria Gonzalez",
-    university: "New York University",
-    specialty: "Business and Finance",
-    department: "Stern School of Business",
-    rating: 4.7,
-  },
-];
+if (process.env.NODE_ENV === 'development') {
+    app.use(favicon(path.resolve('../', 'client', 'public', 'lightning.png')))
+}
+else if (process.env.NODE_ENV === 'production') {
+    app.use(favicon(path.resolve('../', 'client', 'public', 'lightning.png')))
+    app.use(express.static('public'))
+}
 
-app.get("/api/universities/:universityName/advisors", (request, response) => {
-  const universityName = request.params.universityName.toLowerCase();
+// specify the api path for the server to use
+app.use("/api/advisors", advisorRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/universities", universityRoutes);
 
-  const matchingAdvisors = advisors.filter(
-    (advisor) => advisor.university.toLowerCase() === universityName,
-  );
-
-  response.json(matchingAdvisors);
+// 404 handler if no route is matched
+app.use("/", (req, res) => {
+    res.status(404).json({
+        message: "API route not found",
+    });
 });
 
-app.get("/api/advisors/:id", (request, response) => {
-  const advisor = advisors.find(
-    (currentAdvisor) => currentAdvisor.id === Number(request.params.id),
-  );
+if (process.env.NODE_ENV === 'production') {
+    app.get('/*path', (_, res) =>
+        res.sendFile(path.resolve('public', 'index.html'))
+    )
+}
 
-  if (!advisor) {
-    return response.status(404).json({ error: "Advisor not found" });
-  }
-
-  response.json(advisor);
-});
-
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
 });
