@@ -147,7 +147,7 @@ const resetDatabase = async () => {
             // return the specific db connection back to pool
             client.release();
         }
-
+        
         // shut down the entire connection pool (for resource cleanup and efficiency)
         await pool.end();
     }
