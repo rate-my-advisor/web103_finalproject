@@ -1,10 +1,12 @@
 import { useRoutes } from "react-router-dom";
+import Home from "./pages/Home";
 import ViewAdvisor from "./pages/ViewAdvisor";
 import UniversityAdvisors from "./pages/UniversityAdvisors";
 import "./App.css";
 
 const App = () => {
   const element = useRoutes([
+    { path: "/", element: <Home /> },
     {
       path: "/university/:universityId/advisors",
       element: <UniversityAdvisors />,

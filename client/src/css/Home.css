@@ -1,0 +1,142 @@
+.home-page {
+  min-height: calc(100vh - 90px);
+  padding: clamp(4rem, 10vw, 8rem) 1.5rem;
+  background:
+    radial-gradient(circle at 15% 20%, rgb(86 240 213 / 24%), transparent 28%),
+    radial-gradient(circle at 88% 74%, rgb(80 91 184 / 25%), transparent 32%),
+    linear-gradient(145deg, #f8fbff 0%, #edf2ff 52%, #e7fbf7 100%);
+}
+
+.home-hero {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-eyebrow {
+  margin: 0;
+  color: #4f5bb8;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+#root .home-hero h1 {
+  max-width: 820px;
+  margin: 0.8rem auto 1.25rem;
+  color: #172554;
+  font-size: clamp(3rem, 8vw, 6.25rem);
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.home-hero h1 span {
+  color: #18a995;
+}
+
+.home-description {
+  max-width: 640px;
+  margin: 0 auto 2.75rem;
+  color: #526079;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.65;
+}
+
+.university-search {
+  padding: 1.25rem;
+  border: 1px solid rgb(48 55 125 / 15%);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 24px 70px rgb(37 48 99 / 15%);
+  text-align: left;
+}
+
+.university-search label {
+  display: block;
+  margin: 0 0 0.65rem;
+  color: #1e293b;
+  font-weight: 750;
+}
+
+.university-search-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.university-search input,
+#root .university-search button {
+  min-height: 54px;
+  border-radius: 0.75rem;
+  font: inherit;
+}
+
+.university-search input {
+  min-width: 0;
+  flex: 1;
+  padding: 0 1rem;
+  border: 1px solid #a7b0c4;
+  background: white;
+  color: #111827;
+}
+
+.university-search input:focus {
+  border-color: #30377d;
+  outline: 3px solid rgb(48 55 125 / 15%);
+}
+
+#root .university-search button {
+  width: auto;
+  margin: 0;
+  padding: 0 1.35rem;
+  border: 2px solid transparent;
+  background: #30377d;
+  color: white;
+  cursor: pointer;
+}
+
+#root .university-search button:hover {
+  border-color: #172554;
+}
+
+#root .university-search button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.search-error {
+  margin: 0.8rem 0 0;
+  color: #b42318;
+  font-weight: 650;
+}
+
+.home-proof {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 2rem;
+  color: #526079;
+  font-size: 0.9rem;
+}
+
+.home-proof span::before {
+  margin-right: 0.4rem;
+  color: #18a995;
+  content: "✓";
+  font-weight: 900;
+}
+
+@media (max-width: 640px) {
+  .home-page {
+    padding: 3.5rem 1rem;
+  }
+
+  .university-search-controls {
+    flex-direction: column;
+  }
+
+  #root .university-search button {
+    width: 100%;
+  }
+}
