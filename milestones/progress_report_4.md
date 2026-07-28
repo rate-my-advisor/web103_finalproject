@@ -2,8 +2,8 @@
 
 ## Milestone 4 Completion
 
-Current completion percentage for Milestone 4 - Unit 8: 56% (5 closed items
-and 4 open items).
+Current completion percentage for Milestone 4 - Unit 8: 67% (6 closed items
+and 3 open items).
 
 List each issue you completed this unit and the main file or folder where that work lives, one per line:
 
