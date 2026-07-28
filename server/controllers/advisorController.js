@@ -66,12 +66,12 @@ const createAdvisor = async (req, res) => {
         } = req.body
 
         // check university_id and university_name before proceeding
-        const hasUniversityId = 
+        const hasUniversityId =
             university_id !== undefined &&
             university_id !== null &&
             university_id !== ""
 
-        const hasUniversityName = 
+        const hasUniversityName =
             typeof university_name === "string" &&
             university_name.trim() !== ""
 
@@ -122,6 +122,17 @@ const createAdvisor = async (req, res) => {
             }
         }
 
+        // validate office
+        if (
+            office !== undefined &&
+            office !== null &&
+            typeof office !== "string"
+        ) {
+            return res.status(400).json({
+                message: "office must be a string"
+            })
+        }
+
         // pull one specific connection from pool
         client = await pool.connect()
 
@@ -169,24 +180,13 @@ const createAdvisor = async (req, res) => {
             universityId = universityResults.rows[0].university_id
         }
 
-        // validate office
-        if (
-            office !== undefined &&
-            office !== null &&
-            typeof office !== "string"
-        ) {
-            return res.status(400).json({
-                message: "office must be a string"
-            })
-        }
-
         const advisorResults = await client.query(
             `
                 INSERT INTO advisors (
                     university_id,
                     first_name,
                     last_name,
-                    email, 
+                    email,
                     department,
                     office
                 )
@@ -275,7 +275,7 @@ const updateAdvisor = async (req, res) => {
 
         if (
             university_id !== undefined &&
-            (!Number.isInteger(universityId) || univeristyId <= 0)
+            (!Number.isInteger(universityId) || universityId <= 0)
         ) {
             return res.status(400).json({
                 message: "Invalid university ID",

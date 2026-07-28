@@ -5,14 +5,11 @@ import { getAdvisorsByUniversity } from "../api/advisors";
 import "../css/UniversityAdvisors.css";
 
 const UniversityAdvisors = () => {
-  const { universityName } = useParams();
+  const { universityId } = useParams();
+  const [universityName, setUniversityName] = useState("")
   const [advisors, setAdvisors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const formattedUniversityName = decodeURIComponent(universityName || "")
-    .replace(/-/g, " ")
-    .trim();
 
   useEffect(() => {
     const loadAdvisors = async () => {
@@ -20,11 +17,12 @@ const UniversityAdvisors = () => {
         setLoading(true);
         setError("");
 
-        const data = await getAdvisorsByUniversity(formattedUniversityName);
+        const {university, advisors} = await getAdvisorsByUniversity(universityId);
 
+        setUniversityName(university.name)
         setAdvisors(
-          [...data].sort((firstAdvisor, secondAdvisor) =>
-            firstAdvisor.name.localeCompare(secondAdvisor.name),
+          [...advisors].sort((firstAdvisor, secondAdvisor) =>
+            firstAdvisor.first_name.localeCompare(secondAdvisor.first_name),
           ),
         );
       } catch (requestError) {
@@ -35,14 +33,14 @@ const UniversityAdvisors = () => {
     };
 
     loadAdvisors();
-  }, [formattedUniversityName]);
+  }, [universityId]);
 
   return (
     <>
       <SiteHeader />
 
       <main className="advisor-list-page">
-        <h1>Advisors at {formattedUniversityName}</h1>
+        <h1>Advisors at {universityName ? universityName: "..."}</h1>
 
         {loading && <p>Loading advisors…</p>}
 
@@ -60,18 +58,18 @@ const UniversityAdvisors = () => {
             {advisors.map((advisor) => (
               <Link
                 className="advisor-card"
-                key={advisor.id}
-                to={`/advisor/${advisor.id}`}
+                key={advisor.advisor_id}
+                to={`/advisor/${advisor.advisor_id}`}
               >
                 <div>
-                  <h2>{advisor.name}</h2>
-                  <p className="advisor-specialty">{advisor.specialty}</p>
+                  <h2>{`${advisor.first_name} ${advisor.last_name}`}</h2>
+                  <p className="advisor-email">{advisor.email}</p>
                   <p className="advisor-department">{advisor.department}</p>
                 </div>
 
                 <div
                   className="advisor-rating"
-                  aria-label={`${advisor.rating} out of 5`}
+                  aria-label={`${advisor.rating ?? 0} out of 5`}
                 >
                   {advisor.rating} / 5
                 </div>
