@@ -25,12 +25,13 @@ Frontend:
 - HTML
 
 Backend:
-- Express (Render db)
+- Express
+- PostgreSQL (Render)
 - JS
 
 ## Features
 
-### (1) [x] Browse list of advisors available to the specific university
+### (1) ✅ Browse list of advisors available to the specific university
 
 List page shows all advisors that were rated on the website. User can filter through tags to find best advisor to fit their needs.
 
@@ -76,4 +77,42 @@ Students can search for good advisors quickly by viewing the average grade given
 
 ## Installation Instructions
 
-[instructions go here]
+Requirements:
+
+- Node.js 20 or newer
+- A PostgreSQL database
+
+1. Install the frontend and server dependencies:
+
+   ```bash
+   cd client && npm ci
+   cd ../server && npm ci
+   ```
+
+2. Create `server/.env` with your PostgreSQL connection values:
+
+   ```text
+   PGUSER=your_user
+   PGPASSWORD=your_password
+   PGHOST=your_host
+   PGPORT=5432
+   PGDATABASE=your_database
+   NODE_ENV=development
+   PORT=3000
+   ```
+
+3. Create the database tables:
+
+   ```bash
+   cd server
+   npm run reset
+   ```
+
+4. Start the API and frontend in separate terminals:
+
+   ```bash
+   cd server && npm run dev
+   cd client && npm run dev
+   ```
+
+5. Open the local URL printed by Vite.

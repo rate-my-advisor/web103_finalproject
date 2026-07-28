@@ -2,11 +2,17 @@
 
 ## Milestone 4 Completion
 
-Completion percentage for Milestone 4 - Unit 8: 30%
+Current completion percentage for Milestone 4 - Unit 8: 33% (3 closed items
+and 6 open items).
 
 List each issue you completed this unit and the main file or folder where that work lives, one per line:
 
-- No Unit 8 issues have been closed yet.
+- #7 Set up and validate the backend — `server/`
+- #16 Confirm advisor and university data model — `server/config/reset.js`
+- PR #22 Complete backend API and database integration — `server/`
+
+The percentage will be updated to 100% after the remaining Unit 8 work is
+reviewed, merged, and closed.
 
 ## Features Completed This Unit
 
