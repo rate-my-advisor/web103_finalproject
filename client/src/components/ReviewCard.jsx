@@ -28,7 +28,10 @@ const RatingBar = ({ label, value }) => {
 
 const ReviewCard = ({ review }) => {
   const {
+    name,
     username,
+    avatar_url,
+    user_avatar,
     overall_rating,
     communication_rating,
     availability_rating,
@@ -43,12 +46,31 @@ const ReviewCard = ({ review }) => {
     day: "numeric",
   });
 
+  const avatar = avatar_url || user_avatar;
+  const displayName = name || (username ? `@${username}` : "Anonymous User");
+
   return (
     <div className="review-card">
       <div className="review-header">
         <div className="user-info">
-          <span className="username">@{username}</span>
-          <span className="review-date">{formattedDate}</span>
+          {avatar ? (
+            <img
+              src={avatar}
+              alt={displayName}
+              className="reviewer-avatar"
+            />
+          ) : (
+            <div className="reviewer-avatar-fallback">
+              👤
+            </div>
+          )}
+          <div className="user-details">
+            <span className="username">{displayName}</span>
+            {name && username && (
+              <span className="user-handle">@{username}</span>
+            )}
+            <span className="review-date">{formattedDate}</span>
+          </div>
         </div>
 
         <div className="overall-rating">

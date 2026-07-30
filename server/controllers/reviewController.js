@@ -20,9 +20,12 @@ const getReviewsByAdvisor = async (req, res) => {
         // most recent reviews first displayed on top of page
         const results = await pool.query(
             `
-                SELECT r.*, COALESCE(s.username, 'Anonymous') AS username
+                SELECT r.*,
+                       u.username,
+                       u.name,
+                       u.avatar_url
                 FROM reviews r
-                LEFT JOIN students s on r.student_id = s.student_id
+                LEFT JOIN users u ON r.user_id = u.id
                 WHERE r.advisor_id = $1
                 ORDER BY review_date DESC, review_id DESC
             `,
@@ -49,8 +52,10 @@ const createReview = async (req, res) => {
             availability_rating,
             comment,
             would_recommend,
+            user_id
         } = req.body;
 
+        const userId = req.user?.id || (user_id ? Number(user_id) : null);
         const advisorId = Number(advisor_id);
         const overallRating = Number(overall_rating);
         const communicationRating = Number(communication_rating);
@@ -106,17 +111,19 @@ const createReview = async (req, res) => {
             `
                 INSERT INTO reviews (
                     advisor_id,
+                    user_id,
                     overall_rating,
                     communication_rating,
                     availability_rating,
                     comment,
                     would_recommend
                 )
-                VALUES ($1, $2, $3, $4, $5, $6)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 RETURNING *
             `,
             [
                 advisorId,
+                userId,
                 overallRating,
                 communicationRating,
                 availabilityRating,

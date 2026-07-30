@@ -3,22 +3,63 @@ import path from 'path'
 import fs from 'fs'
 import favicon from 'serve-favicon'
 import dotenv from 'dotenv'
+import session from 'express-session'
+import passport from './config/passport.js'
 import cors from 'cors'
 
-// import the router from your routes file
+// Import routes
 import advisorRoutes from "./routes/advisorRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import universityRoutes from "./routes/universityRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config()
 
 const PORT = process.env.PORT || 3000
-
 const app = express();
 
-// middleware
+// Basic Middleware
 app.use(express.json());
-app.use(cors());
+
+// CORS Configuration
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL
+].filter(Boolean);
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(null, true);
+            }
+        },
+        credentials: true
+    })
+);
+
+// Express Session Middleware
+const isHttps = process.env.COOKIE_SECURE === 'true';
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || 'secret_key_rate_my_advisor',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: isHttps,
+            sameSite: isHttps ? 'none' : 'lax',
+            maxAge: 24 * 60 * 60 * 1000
+        }
+    })
+);
+
+// Passport Authentication Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Favicon resolution
 const devFavicon = path.resolve('../', 'client', 'public', 'lightning.png')
@@ -34,23 +75,19 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static('public'))
 }
 
-// specify the api path for the server to use
+// API Routes
+app.use("/auth", authRoutes);
 app.use("/api/advisors", advisorRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/universities", universityRoutes);
 
-// 404 handler if no route is matched
+// API 404 Handler
 app.use("/api", (req, res) => {
     res.status(404).json({
         message: "API route not found",
     });
 });
 
-if (process.env.NODE_ENV === 'production') {
-    app.get('/*path', (_, res) =>
-        res.sendFile(path.resolve('public', 'index.html'))
-    )
-}
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
