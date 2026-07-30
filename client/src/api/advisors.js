@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.PROD ? '{YOUR_SERVER_URL}' : '/api'
+const API_BASE_URL = import.meta.env.PROD ? 'https://server-bncl.onrender.com' : ''
 
 
 async function request(path) {
