@@ -5,9 +5,71 @@
   color: #121526;
 }
 
-.advisor-list-page h1 {
-  margin: 0 0 2rem;
+.advisor-list-heading {
+  margin-bottom: 2rem;
+}
+
+.advisor-list-heading h1 {
+  margin: 0.35rem 0 0.75rem;
   font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.advisor-list-heading > p:last-child {
+  max-width: 680px;
+  color: #566079;
+  line-height: 1.6;
+}
+
+.advisor-list-eyebrow {
+  margin: 0;
+  color: #4f5bb8;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.advisor-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.5fr) repeat(2, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #dce2ef;
+  border-radius: 16px;
+  background: #f8faff;
+}
+
+.advisor-controls label {
+  display: grid;
+  gap: 0.45rem;
+  color: #30374d;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.advisor-controls input,
+.advisor-controls select {
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 0.8rem;
+  border: 1px solid #aab4c8;
+  border-radius: 10px;
+  background: white;
+  color: #121526;
+  font: inherit;
+}
+
+.advisor-controls input:focus,
+.advisor-controls select:focus {
+  border-color: #30377d;
+  outline: 3px solid rgb(48 55 125 / 14%);
+}
+
+.advisor-result-count {
+  margin: 0 0 1rem;
+  color: #566079;
+  font-weight: 700;
 }
 
 .advisor-list {
@@ -43,7 +105,7 @@
   font-size: 1.8rem;
 }
 
-.advisor-specialty,
+.advisor-email,
 .advisor-department {
   margin: 0.2rem 0;
 }
@@ -70,6 +132,12 @@
   border: 1px dashed #9aa6c2;
   border-radius: 16px;
   text-align: center;
+}
+
+@media (max-width: 800px) {
+  .advisor-controls {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {

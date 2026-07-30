@@ -1,25 +1,52 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
-import { getAdvisorById } from "../api/advisors";
+import ReviewCard from "../components/ReviewCard.jsx";
+import AdvisorProfileCard from "../components/AdvisorProfileCard.jsx";
+import AdvisorRatingCard from "../components/AdvisorRatingCard.jsx";
+import { getAdvisorById, getReviewsByAdvisor } from "../api/advisors";
 import "../css/ViewAdvisor.css";
 
 const ViewAdvisor = () => {
-  const { id } = useParams();
+  const rawId = Number(useParams().id) || null;
   const [advisor, setAdvisor] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
 
+  // Safely parse to number
+  const id = Number(rawId);
+  const isValidId = Boolean(rawId) && !Number.isNaN(id);
+
   useEffect(() => {
+    if (!isValidId) return;
+
     const loadAdvisor = async () => {
       try {
-        setAdvisor(await getAdvisorById(id));
-      } catch {
-        setError("This advisor could not be found.");
+        const [advisor, reviews] = await Promise.all([
+          getAdvisorById(id),
+          getReviewsByAdvisor(id),
+        ]);
+        setAdvisor(advisor);
+        setReviews(reviews);
+      } catch (error) {
+        setError(error.message);
       }
     };
-
     loadAdvisor();
-  }, [id]);
+  }, [id, isValidId]);
+
+  // Id not a number
+  if (!isValidId) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="container">
+          <h1>Invalid id</h1>
+          <Link to="/">Return home</Link>
+        </main>
+      </>
+    );
+  }
 
   if (error) {
     return (
@@ -34,22 +61,34 @@ const ViewAdvisor = () => {
   }
 
   if (!advisor) {
-    return <p>Loading advisor…</p>;
+    return (
+      <>
+        <SiteHeader />
+        <main className="container">
+          <p>Loading advisor…</p>
+        </main>
+      </>
+    );
   }
 
   return (
     <>
       <SiteHeader />
       <main className="container">
-        <section className="summary">
-          <div>
-            <h1>{advisor.name}</h1>
-            <p>{advisor.specialty}</p>
-            <p>{advisor.department}</p>
-            <p>{advisor.university}</p>
-          </div>
+        <section className="summary-section">
+          <AdvisorProfileCard advisor={advisor} />
+          <AdvisorRatingCard advisor={advisor} reviews={reviews} />
+        </section>
 
-          <strong className="rating-card">{advisor.rating} / 5</strong>
+        <section className="reviews">
+          <h2>Reviews</h2>
+          {reviews.length === 0 ? (
+            <p className="no-reviews-msg">No reviews written for this advisor yet.</p>
+          ) : (
+            reviews.map((review, index) => (
+              <ReviewCard key={index} review={review} />
+            ))
+          )}
         </section>
       </main>
     </>
@@ -57,3 +96,4 @@ const ViewAdvisor = () => {
 };
 
 export default ViewAdvisor;
+

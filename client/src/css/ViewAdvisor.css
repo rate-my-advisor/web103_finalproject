@@ -1,66 +1,59 @@
-/* Container Layout */
+/* Main Container */
 .container {
-  max-width: 70%;
-  margin: 20px auto;
-  padding: 0 20px;
-  font-family: sans-serif;
-  color: #333;
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1f2937;
 }
 
-/* Header Section */
-.summary {
+/* Section Title Labels above Cards */
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #9ca3af;
+  margin: 0 0 12px 4px;
+  letter-spacing: 0.02em;
+}
+
+/* Summary Two-Column Grid */
+.summary-section {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  margin-bottom: 40px;
+  align-items: stretch;
+}
+
+@media (max-width: 860px) {
+  .summary-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-column,
+.rating-column {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+  flex-direction: column;
 }
 
-.advisor-info h1 {
-  margin: 0 0 5px 0;
-}
-
-.department {
-  margin: 0 0 5px 0;
-  color: #666;
-  font-weight: bold;
-}
-
-.school {
-  margin: 0;
-  color: #888;
-}
-
-/* Rating Badge */
-.rating-card h3 {
-  margin: 0;
-  background: #f0f4f8;
-  padding: 10px 20px;
-  border-radius: 8px;
-  color: #0066cc;
-  font-size: 1.5rem;
-}
-
-/* Reviews List */
-.reviews h1 {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
+/* Reviews List Section */
+.reviews h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
 }
 
 .reviews {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
-/* Button for Not Found State */
-.button {
-  display: inline-block;
-  background: #0066cc;
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 4px;
-  margin-top: 10px;
+.no-reviews-msg {
+  color: #6b7280;
+  font-style: italic;
 }
+
+

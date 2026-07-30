@@ -25,20 +25,23 @@ Frontend:
 - HTML
 
 Backend:
-- Express (Render db)
+- Express
+- PostgreSQL (Render)
 - JS
 
 ## Features
 
-### (1) [x] Browse list of advisors available to the specific university
+### (1) ✅ Browse list of advisors available to the specific university
 
-List page shows all advisors that were rated on the website. User can filter through tags to find best advisor to fit their needs.
+The university page lists the available academic advisors and links each result
+to its detailed profile.
 
 ![University advisor list demo](client/src/assets/university-advisor-list.gif)
 
 ### (2) ✅ User can click on advisor to see detailed information on the related content
 
-User can click on advisors to view their profiles and current reviews given by students.
+Users can open an advisor profile to view university and department details,
+the current average rating, student reviews, and recommendation percentage.
 
 ![Advisor profile demo](client/src/assets/advisor-profile.gif)
 
@@ -66,14 +69,52 @@ Report button for review on foul and abusive language
 
 [gif goes here]
 
-### (7) Average grades are applied on advisors overall ratings for quick student viewing
+### (7) ✅ Average grades are applied on advisors overall ratings for quick student viewing
 
 Students can search for good advisors quickly by viewing the average grade given to each advisor based on their overall ratings (rounded to the nearest tenth place).
 
-[gif goes here]
+![Advisor rating summary demo](client/src/assets/advisor-profile.gif)
 
 ### [ADDITIONAL FEATURES GO HERE - ADD ALL FEATURES HERE IN THE FORMAT ABOVE; you will check these off and add gifs as you complete them]
 
 ## Installation Instructions
 
-[instructions go here]
+Requirements:
+
+- Node.js 20 or newer
+- A PostgreSQL database
+
+1. Install the frontend and server dependencies:
+
+   ```bash
+   cd client && npm ci
+   cd ../server && npm ci
+   ```
+
+2. Create `server/.env` with your PostgreSQL connection values:
+
+   ```text
+   PGUSER=your_user
+   PGPASSWORD=your_password
+   PGHOST=your_host
+   PGPORT=5432
+   PGDATABASE=your_database
+   NODE_ENV=development
+   PORT=3000
+   ```
+
+3. Create the database tables:
+
+   ```bash
+   cd server
+   npm run reset
+   ```
+
+4. Start the API and frontend in separate terminals:
+
+   ```bash
+   cd server && npm run dev
+   cd client && npm run dev
+   ```
+
+5. Open the local URL printed by Vite.

@@ -38,15 +38,19 @@ const ReviewCard = ({ review }) => {
     availability_rating,
     comment,
     would_recommend,
-    datetime_unix,
+    review_date,
   } = review;
 
+<<<<<<< HEAD
   // If the comment is reported, return null to immediately hide it
   if (isReported) {
     return null;
   }
 
   const formattedDate = new Date(datetime_unix).toLocaleDateString(undefined, {
+=======
+  const formattedDate = new Date(review_date).toLocaleDateString(undefined, {
+>>>>>>> main
     year: "numeric",
     month: "long",
     day: "numeric",
