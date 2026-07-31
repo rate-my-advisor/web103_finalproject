@@ -110,7 +110,7 @@ router.get(
     '/github/callback',
     passport.authenticate('github', {
         successRedirect: CLIENT_URL,
-        failureRedirect: `${CLIENT_URL}/login/failed`
+        failureRedirect: `${CLIENT_URL}/login?error=auth_failed`
     })
 )
 

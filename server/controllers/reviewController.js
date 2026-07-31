@@ -107,6 +107,19 @@ const createReview = async (req, res) => {
             });
         }
 
+        // Prevent duplicate reviews from logged-in users for the same advisor
+        if (userId) {
+            const existingReview = await pool.query(
+                `SELECT review_id FROM reviews WHERE advisor_id = $1 AND user_id = $2`,
+                [advisorId, userId]
+            );
+            if (existingReview.rows.length > 0) {
+                return res.status(400).json({
+                    message: "You have already submitted a review for this advisor.",
+                });
+            }
+        }
+
         const results = await pool.query(
             `
                 INSERT INTO reviews (
@@ -134,6 +147,13 @@ const createReview = async (req, res) => {
 
         return res.status(201).json(results.rows[0]);
     } catch (err) {
+        // Duplicate review constraint violation
+        if (err.code === "23505") {
+            return res.status(400).json({
+                message: "You have already submitted a review for this advisor.",
+            });
+        }
+
         // advisor_id doesn't reference existing row
         if (err.code === "23503") {
             return res.status(400).json({

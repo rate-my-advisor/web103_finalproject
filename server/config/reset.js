@@ -93,6 +93,10 @@ const resetDatabase = async () => {
                 FOREIGN KEY (user_id)
                     REFERENCES users(id) ON DELETE SET NULL
             );
+
+            CREATE UNIQUE INDEX IF NOT EXISTS unique_user_advisor_review
+            ON reviews (advisor_id, user_id)
+            WHERE user_id IS NOT NULL;
         `);
 
         // Create trigger to recalculate advisor rating on update
@@ -135,21 +139,21 @@ const resetDatabase = async () => {
 
         // Insert seed universities and advisors for instant testing
         await client.query(`
-            INSERT INTO universities (name) VALUES 
+            INSERT INTO universities (name) VALUES
             ('Harvard University'),
             ('Stanford University'),
             ('Massachusetts Institute of Technology'),
             ('University of California, Berkeley'),
             ('Columbia University');
 
-            INSERT INTO advisors (university_id, first_name, last_name, email, department, office, rating) VALUES
-            (1, 'Sarah', 'Conner', 'sconner@harvard.edu', 'Computer Science', 'Maxwell Dworkin 214', 4.80),
-            (1, 'David', 'Malan', 'dmalan@harvard.edu', 'Computer Science', 'Science Center 102', 4.90),
-            (2, 'Andrew', 'Ng', 'ang@stanford.edu', 'Artificial Intelligence', 'Gates Building 154', 4.90),
-            (2, 'Jennifer', 'Widom', 'jwidom@stanford.edu', 'Computer Science', 'Packard Building 202', 4.70),
-            (3, 'Gilbert', 'Strang', 'gstrang@mit.edu', 'Mathematics', 'Building 2-265', 5.00),
-            (4, 'Michael', 'Jordan', 'jordan@berkeley.edu', 'Data Science', 'Soda Hall 387', 4.60),
-            (5, 'Jeannette', 'Wing', 'jwing@columbia.edu', 'Computer Science', 'Mudd Hall 450', 4.80);
+            INSERT INTO advisors (university_id, first_name, last_name, email, department, office) VALUES
+            (1, 'Sarah', 'Conner', 'sconner@harvard.edu', 'Computer Science', 'Maxwell Dworkin 214'),
+            (1, 'David', 'Malan', 'dmalan@harvard.edu', 'Computer Science', 'Science Center 102'),
+            (2, 'Andrew', 'Ng', 'ang@stanford.edu', 'Artificial Intelligence', 'Gates Building 154'),
+            (2, 'Jennifer', 'Widom', 'jwidom@stanford.edu', 'Computer Science', 'Packard Building 202'),
+            (3, 'Gilbert', 'Strang', 'gstrang@mit.edu', 'Mathematics', 'Building 2-265'),
+            (4, 'Michael', 'Jordan', 'jordan@berkeley.edu', 'Data Science', 'Soda Hall 387'),
+            (5, 'Jeannette', 'Wing', 'jwing@columbia.edu', 'Computer Science', 'Mudd Hall 450');
         `);
 
         // COMMIT means every query succeeded, so save all changes
@@ -173,7 +177,7 @@ const resetDatabase = async () => {
             // return the specific db connection back to pool
             client.release();
         }
-        
+
         // shut down the entire connection pool (for resource cleanup and efficiency)
         await pool.end();
     }
