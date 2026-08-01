@@ -84,6 +84,29 @@ Requirements:
 - Node.js 20 or newer
 - A PostgreSQL database
 
+With Docker:
+
+1. Create `server/.env` with your PostgreSQL connection values:
+
+   ```text
+   PGUSER=your_user
+   PGPASSWORD=your_password
+   PGHOST=your_host
+   PGPORT=5432
+   PGDATABASE=your_database
+   NODE_ENV=development
+   PORT=3000
+   CLIENT_URL=your_frontend_url
+   SESSION_SECRET=super_secret_rate_my_advisor_key
+   GITHUB_CLIENT_ID=your_client_id
+   GITHUB_CLIENT_SECRET=your_client_secret
+   GITHUB_CALLBACK_URL=your_callback_url
+   ```
+
+2. Run ```bash docker compose up --build```
+
+Without Docker:
+
 1. Install the frontend and server dependencies:
 
    ```bash
@@ -101,6 +124,11 @@ Requirements:
    PGDATABASE=your_database
    NODE_ENV=development
    PORT=3000
+   CLIENT_URL=your_frontend_url
+   SESSION_SECRET=super_secret_rate_my_advisor_key
+   GITHUB_CLIENT_ID=your_client_id
+   GITHUB_CLIENT_SECRET=your_client_secret
+   GITHUB_CALLBACK_URL=your_callback_url
    ```
 
 3. Create the database tables:
