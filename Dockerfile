@@ -8,6 +8,10 @@ WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
 
+# Make it available to Vite during build
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Copy client source & compile production static bundle
 COPY client/ ./
 RUN npm run build
