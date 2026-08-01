@@ -1,0 +1,242 @@
+.review-form {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  background-color: #ffffff;
+  border: 1px solid #dfe3ec;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+
+  color: #111827;
+}
+
+/* Each question group */
+.review-form-section {
+  margin: 0;
+  padding: 1.5rem 0 2rem;
+
+  border: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Keep the first question near the top of the card */
+.review-form-section:first-child {
+  padding-top: 0;
+}
+
+/* Add breathing room after each divider */
+.review-form-section + .review-form-section {
+  margin-top: 1.5rem;
+}
+
+.review-form-section legend,
+.review-form-section > label {
+  display: block;
+  padding: 0;
+  margin: 0 0 0.5rem;
+
+  color: #111827;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.review-form-section p {
+  margin: 0 0 1rem;
+
+  color: #667085;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Rating dropdowns */
+.review-form select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 2.75rem 0.75rem 0.9rem;
+
+  background-color: #ffffff;
+  border: 1px solid #cfd5e1;
+  border-radius: 9px;
+
+  color: #111827;
+  font: inherit;
+
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Comment box */
+.review-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  padding: 0.9rem;
+
+  background-color: #ffffff;
+  border: 1px solid #cfd5e1;
+  border-radius: 9px;
+
+  color: #111827;
+  font: inherit;
+  line-height: 1.5;
+
+  resize: vertical;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.review-form textarea::placeholder {
+  color: #98a2b3;
+}
+
+/* Mint focus color matching the site logo */
+.review-form select:focus,
+.review-form textarea:focus {
+  border-color: #43d9bf;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(67, 217, 191, 0.2);
+}
+
+/* Yes / No radio options */
+.recommendation-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.recommendation-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  min-width: 110px;
+  padding: 0.75rem 1rem;
+
+  background-color: #f8f9fc;
+  border: 1px solid #d9deea;
+  border-radius: 9px;
+
+  color: #344054;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.recommendation-options label:hover {
+  background-color: #f1f3fa;
+  border-color: #343d88;
+}
+
+.recommendation-options input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+
+  accent-color: #343d88;
+  cursor: pointer;
+}
+
+/* Character counter */
+.character-count {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0 !important;
+
+  color: #98a2b3 !important;
+  font-size: 0.85rem !important;
+  text-align: right;
+}
+
+/* Error and success messages */
+.form-message {
+  margin: 1.25rem 0 0;
+  padding: 0.85rem 1rem;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.form-error {
+  background-color: #fff1f2;
+  border-color: #fecdd3;
+  color: #b42318;
+}
+
+.form-success {
+  background-color: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #067647;
+}
+
+/* Main submit button */
+.submit-review-button {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.25rem;
+
+  background-color: #343d88;
+  border: 0;
+  border-radius: 9px;
+
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+}
+
+.submit-review-button:hover:not(:disabled) {
+  background-color: #293273;
+  box-shadow: 0 5px 12px rgba(52, 61, 136, 0.2);
+}
+
+.submit-review-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit-review-button:focus-visible {
+  outline: 3px solid rgba(67, 217, 191, 0.7);
+  outline-offset: 3px;
+}
+
+.submit-review-button:disabled {
+  background-color: #98a2b3;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+  .review-form {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .review-form-section {
+    padding: 1.25rem 0;
+  }
+
+  .recommendation-options {
+    flex-direction: column;
+  }
+
+  .recommendation-options label {
+    width: 100%;
+  }
+}
