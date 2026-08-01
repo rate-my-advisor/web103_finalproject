@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/ReviewForm.css";
 
 // small component (rating 1 to 5)
@@ -32,6 +33,7 @@ const initialFormData = {
 
 // prop is advisorId
 const ReviewForm = ({ advisorId }) => {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState(initialFormData)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState("")
@@ -47,7 +49,7 @@ const ReviewForm = ({ advisorId }) => {
         }))
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
         setError("")
@@ -66,11 +68,33 @@ const ReviewForm = ({ advisorId }) => {
             setIsSubmitting(true)
             console.log("Review is being submitted: ", reviewData)
 
-            // save the data inputted in the DB (not done yet)
+            const response = await fetch(
+                `/api/reviews`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(reviewData),
+                }
+            )
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.message || "Unable to submit review.");
+            }
+
+            console.log("Saved review:", result);
 
             setSuccessMessage("Review was submitted successfully.")
             // reset form after successful submission
             setFormData(initialFormData)
+            // go back to advisor profile
+                // replace: true (prevents accidental duplicate submissions
+                // through browser navigation by replacing current page
+                // in browder's history instead of adding a new history entry)
+            navigate(`/advisor/${advisorId}`, { replace: true })
         } catch {
             setError("Unable to submit review. :(")
         } finally {
