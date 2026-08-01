@@ -287,6 +287,28 @@ const updateReview = async (req, res) => {
             });
         }
 
+        // Fetch the review first to check ownership
+        const reviewResult = await pool.query(
+            `SELECT user_id FROM reviews WHERE review_id = $1`,
+            [reviewId]
+        );
+
+        if (reviewResult.rows.length === 0) {
+            return res.status(404).json({
+                message: "Review not found",
+            });
+        }
+
+        const review = reviewResult.rows[0];
+
+        // Anonymous reviews (user_id IS NULL) cannot be edited by anyone
+        // Logged-in reviews can only be edited by their author
+        if (review.user_id === null || review.user_id !== req.user.id) {
+            return res.status(403).json({
+                message: "Forbidden. You can only edit your own reviews.",
+            });
+        }
+
         const results = await pool.query(
             `
                 UPDATE reviews
