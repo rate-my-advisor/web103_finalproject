@@ -4,7 +4,7 @@ CodePath WEB103 Final Project
 
 Designed and developed by: Kaylie Chang, Mohtashim Syed, Alex Gong, Justin Wong, Fiyinfoluwa Somorin, Isfahan Juboraj
 
-🔗 Link to deployed app: 
+🔗 Link to deployed app: https://server-bncl.onrender.com
 
 ## About
 
