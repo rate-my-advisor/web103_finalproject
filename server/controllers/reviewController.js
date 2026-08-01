@@ -354,6 +354,28 @@ const deleteReview = async (req, res) => {
             });
         }
 
+        // Fetch the review first to check ownership
+        const reviewResult = await pool.query(
+            `SELECT user_id FROM reviews WHERE review_id = $1`,
+            [reviewId]
+        );
+
+        if (reviewResult.rows.length === 0) {
+            return res.status(404).json({
+                message: "Review not found",
+            });
+        }
+
+        const review = reviewResult.rows[0];
+
+        // Anonymous reviews (user_id IS NULL) cannot be deleted by anyone
+        // Logged-in reviews can only be deleted by their author
+        if (review.user_id === null || review.user_id !== req.user.id) {
+            return res.status(403).json({
+                message: "Forbidden. You can only delete your own reviews.",
+            });
+        }
+
         const results = await pool.query(
             `
                 DELETE FROM reviews
@@ -362,12 +384,6 @@ const deleteReview = async (req, res) => {
             `,
             [reviewId],
         );
-
-        if (results.rows.length === 0) {
-            return res.status(404).json({
-                message: "Review not found",
-            });
-        }
 
         return res.status(200).json({
             message: "Review deleted successfully",
