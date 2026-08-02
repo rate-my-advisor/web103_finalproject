@@ -4,7 +4,6 @@ import SiteHeader from "../components/SiteHeader";
 import ReviewCard from "../components/ReviewCard.jsx";
 import AdvisorProfileCard from "../components/AdvisorProfileCard.jsx";
 import AdvisorRatingCard from "../components/AdvisorRatingCard.jsx";
-import AddReviewModal from "../components/AddReviewModal.jsx";
 import { getAdvisorById, getReviewsByAdvisor } from "../api/advisors";
 import "../css/ViewAdvisor.css";
 
@@ -13,7 +12,6 @@ const ViewAdvisor = () => {
   const [advisor, setAdvisor] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Safely parse to number
   const id = Number(rawId);
@@ -36,10 +34,6 @@ const ViewAdvisor = () => {
     };
     loadAdvisor();
   }, [id, isValidId]);
-
-  const handleReviewAdded = (newReview) => {
-    setReviews((prev) => [newReview, ...prev]);
-  };
 
   // Id not a number
   if (!isValidId) {
@@ -89,12 +83,13 @@ const ViewAdvisor = () => {
         <section className="reviews">
           <div className="reviews-header">
             <h2>Reviews</h2>
-            <button
-              className="add-review-btn"
-              onClick={() => setIsModalOpen(true)}
+
+            <Link
+              to={`/advisor/${id}/review`}
+              className="create-review-link"
             >
-              + Write a Review
-            </button>
+              Write a Review
+            </Link>
           </div>
 
           {reviews.length === 0 ? (
@@ -105,13 +100,6 @@ const ViewAdvisor = () => {
             ))
           )}
         </section>
-
-        <AddReviewModal
-          advisorId={id}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onReviewAdded={handleReviewAdded}
-        />
       </main>
     </>
   );

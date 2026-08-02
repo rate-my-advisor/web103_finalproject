@@ -6,8 +6,8 @@ This document should be completed and submitted during **Unit 9** of this course
 
 This unit, be sure to complete all tasks listed below. To complete a task, place an `x` between the brackets.
 
-- [ ] Deploy your project on Render
-  - [ ] In `readme.md`, add the link to your deployed project
+- [x] Deploy your project on Render
+  - [x] In `readme.md`, add the link to your deployed project
 - [ ] Update the status of issues in your project board as you complete them
 - [ ] In `readme.md`, check off the features you have completed in this unit by adding a ✅ emoji in front of their title
   - [ ] Under each feature you have completed, **include a GIF** showing feature functionality
@@ -24,26 +24,26 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 
 👉🏾👉🏾👉🏾 Check off each completed feature below.
 
-- [ ] The project includes an Express backend app and a React frontend app
+- [x] The project includes an Express backend app and a React frontend app
 - [ ] The project includes these backend-specific features:
-  - [ ] At least one of each of the following database relationships in Postgres
-    - [ ] one-to-many
-    - [ ] many-to-many with a join table
+  - [x] At least one of each of the following database relationships in Postgres
+    - [x] one-to-many
+    - [x] many-to-many with a join table
   - [ ] A well-designed RESTful API that:
     - [ ] supports all four main request types for a single entity (ex. tasks in a to-do list app): GET, POST, PATCH, and DELETE
       - [ ] the user can **view** items, such as tasks
       - [ ] the user can **create** a new item, such as a task
       - [ ] the user can **update** an existing item by changing some or all of its values, such as changing the title of task
       - [ ] the user can **delete** an existing item, such as a task
-    - [ ] Routes follow proper naming conventions
-  - [ ] The web app includes the ability to reset the database to its default state
+    - [x] Routes follow proper naming conventions
+  - [x] The web app includes the ability to reset the database to its default state
 - [ ] The project includes these frontend-specific features:
   - [ ] At least one redirection, where users are able to navigate to a new page with a new URL within the app
   - [ ] At least one interaction that the user can initiate and complete on the same page without navigating to a new page
-  - [ ] Dynamic frontend routes created with React Router
-  - [ ] Hierarchically designed React components
-    - [ ] Components broken down into categories, including Page and Component types
-    - [ ] Corresponding container components and presenter components as appropriate
+  - [x] Dynamic frontend routes created with React Router
+  - [x] Hierarchically designed React components
+    - [x] Components broken down into categories, including Page and Component types
+    - [x] Corresponding container components and presenter components as appropriate
 - [ ] The project includes dynamic routes for both frontend and backend apps
 - [ ] The project is deployed on Render with all pages and features that are visible to the user are working as intended
 
@@ -52,11 +52,11 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 👉🏾👉🏾👉🏾 Check off each completed feature below.
 
 - [ ] The project gracefully handles errors
-- [ ] The project includes a one-to-one database relationship
+- [x] The project includes a one-to-one database relationship
 - [ ] The project includes a slide-out pane or modal as appropriate for your use case that pops up and covers the page content without navigating away from the current page
 - [ ] The project includes a unique field within the join table
 - [ ] The project includes a custom non-RESTful route with corresponding controller actions
-- [ ] The user can filter or sort items based on particular criteria as appropriate for your use case
+- [x] The user can filter or sort items based on particular criteria as appropriate for your use case
 - [ ] Data is automatically generated in response to a certain event or user action. Examples include generating a default inventory for a new user starting a game or creating a starter set of tasks for a user creating a new task app account
 - [ ] Data submitted via a POST or PATCH request is validated before the database is updated (e.g. validating that an event is in the future before allowing a new event to be created)
   - [ ] *To receive full credit, please be sure to demonstrate in your walkthrough that for certain inputs, the item will NOT be successfully created or updated.*
@@ -86,20 +86,20 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 
 ### 1. What went well during this unit?
 
-[👉🏾👉🏾👉🏾 your answer here]
+Compared to the beginning of this project, our communication has improved, with everyone understanding what their roles are.
 
 ### 2. What were some challenges your group faced in this unit?
 
-[👉🏾👉🏾👉🏾 your answer here]
+Some challenges our group has faced is completing issues on time and meeting deadlines. For instance, some issues has been delayed when they should have been completed earlier.
 
 ### 3. What were some of the highlights or achievements that you are most proud of in this project?
 
-[👉🏾👉🏾👉🏾 your answer here]
+We are proud of the website meeting our standards (e.g. looks and functionality). Additionally, despite all of us being busy in our own ways and not all being available at the same times, we have been able to still divide up work.
 
 ### 4. Reflecting on your web development journey so far, how have you grown since the beginning of the course?
 
-[👉🏾👉🏾👉🏾 your answer here]
+We have all grown in better understanding expectations, responsibility, and requirements that come with working in a team.
 
 ### 5. Looking ahead, what are your goals related to web development, and what steps do you plan to take to achieve them?
 
-[👉🏾👉🏾👉🏾 your answer here]
+Our goal is to improve our coding efficiency, which would enable us to complete issues quicker and progress through work ahead of time. To achieve them, it will require extra effort and time to practice developing websites through personal projects.
