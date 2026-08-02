@@ -63,13 +63,19 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
+      const res = await fetch(`${API_BASE_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
-      setUser(null);
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "Failed to log out on server.");
+      }
     } catch (err) {
-      console.error("Logout failed:", err);
+      console.error("Logout error:", err);
+    } finally {
+      setUser(null);
     }
   };
 

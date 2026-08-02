@@ -121,7 +121,7 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
           communication_rating: Number(editForm.communication_rating),
           availability_rating: Number(editForm.availability_rating),
           would_recommend: editForm.would_recommend === "true" || editForm.would_recommend === true,
-          comment: editForm.comment.trim() || null,
+          comment: editForm.comment.trim(),
         }),
       });
 
@@ -325,7 +325,7 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
             />
           </div>
 
-          <p className="review-comment">"{comment}"</p>
+          {comment && <p className="review-comment">"{comment}"</p>}
 
           <div className="review-footer">
             {would_recommend ? (

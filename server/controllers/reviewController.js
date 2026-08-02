@@ -317,7 +317,7 @@ const updateReview = async (req, res) => {
                         overall_rating = COALESCE($2, overall_rating),
                         communication_rating = COALESCE($3, communication_rating),
                         availability_rating = COALESCE($4, availability_rating),
-                        comment = COALESCE($5, comment),
+                        comment = CASE WHEN $5::text IS NULL THEN comment ELSE NULLIF($5::text, '') END,
                         would_recommend = COALESCE($6, would_recommend)
                     WHERE review_id = $7
                     RETURNING *
@@ -331,9 +331,9 @@ const updateReview = async (req, res) => {
                 overallRating,
                 communicationRating,
                 availabilityRating,
-                comment === undefined || comment === null
+                comment === undefined
                     ? null
-                    : comment.trim(),
+                    : (comment === null ? "" : comment.trim()),
                 would_recommend === undefined
                     ? null
                     : would_recommend,
