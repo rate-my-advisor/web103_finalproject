@@ -311,15 +311,20 @@ const updateReview = async (req, res) => {
 
         const results = await pool.query(
             `
-                UPDATE reviews
-                SET advisor_id = COALESCE($1, advisor_id),
-                    overall_rating = COALESCE($2, overall_rating),
-                    communication_rating = COALESCE($3, communication_rating),
-                    availability_rating = COALESCE($4, availability_rating),
-                    comment = COALESCE($5, comment),
-                    would_recommend = COALESCE($6, would_recommend)
-                WHERE review_id = $7
-                RETURNING *
+                WITH updated AS (
+                    UPDATE reviews
+                    SET advisor_id = COALESCE($1, advisor_id),
+                        overall_rating = COALESCE($2, overall_rating),
+                        communication_rating = COALESCE($3, communication_rating),
+                        availability_rating = COALESCE($4, availability_rating),
+                        comment = COALESCE($5, comment),
+                        would_recommend = COALESCE($6, would_recommend)
+                    WHERE review_id = $7
+                    RETURNING *
+                )
+                SELECT r.*, u.username, u.name, u.avatar_url
+                FROM updated r
+                LEFT JOIN users u ON r.user_id = u.id
             `,
             [
                 advisorId,

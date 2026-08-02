@@ -71,6 +71,16 @@ const ViewAdvisor = () => {
     );
   }
 
+  const handleReviewDeleted = (deletedId) => {
+    setReviews((prev) => prev.filter((r) => r.review_id !== deletedId));
+  };
+
+  const handleReviewUpdated = (updatedReview) => {
+    setReviews((prev) =>
+      prev.map((r) => (r.review_id === updatedReview.review_id ? updatedReview : r))
+    );
+  };
+
   return (
     <>
       <SiteHeader />
@@ -96,7 +106,12 @@ const ViewAdvisor = () => {
             <p className="no-reviews-msg">No reviews written for this advisor yet.</p>
           ) : (
             reviews.map((review, index) => (
-              <ReviewCard key={review.review_id || index} review={review} />
+              <ReviewCard
+                key={review.review_id || index}
+                review={review}
+                onReviewDeleted={handleReviewDeleted}
+                onReviewUpdated={handleReviewUpdated}
+              />
             ))
           )}
         </section>
