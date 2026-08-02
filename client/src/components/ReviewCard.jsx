@@ -35,13 +35,14 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const [editForm, setEditForm] = useState({
+  const initialState = {
     overall_rating: review.overall_rating || 5,
     communication_rating: review.communication_rating || 5,
     availability_rating: review.availability_rating || 5,
     comment: review.comment || "",
     would_recommend: String(review.would_recommend ?? true),
-  });
+  }
+  const [editForm, setEditForm] = useState(initialState)
 
   // Strict ownership check: both logged-in user ID and review user_id must exist and match
   const isOwner = Boolean(
@@ -229,6 +230,7 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
               className="cancel-btn"
               onClick={() => {
                 setIsEditing(false);
+                setEditForm(initialState);
                 setError("");
               }}
             >
