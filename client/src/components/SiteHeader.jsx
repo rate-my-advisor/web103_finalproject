@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import "../css/SiteHeader.css";
 
 const SiteHeader = () => {
-  const { user, login, logout, loading } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   return (
     <header className="site-header">
