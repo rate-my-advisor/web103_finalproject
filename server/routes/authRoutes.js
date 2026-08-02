@@ -7,6 +7,12 @@ const router = express.Router()
 
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000'
 
+// Regex Patterns
+const USERNAME_REGEX = /^[a-zA-Z0-9_-]{3,16}$/
+// Requires 8-64 chars, 1 uppercase, 1 lowercase, 1 number, and 1 special char
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/
+
+
 // Register a new local user
 router.post('/register', async (req, res, next) => {
     try {
@@ -16,8 +22,20 @@ router.post('/register', async (req, res, next) => {
             return res.status(400).json({ message: 'Username and password are required.' })
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({ message: 'Password must be at least 6 characters long.' })
+        const trimmedUsername = username.trim()
+
+        // Validate Username format
+        if (!USERNAME_REGEX.test(trimmedUsername)) {
+            return res.status(400).json({
+                message: 'Username must be 3-16 characters and can only contain letters, numbers, underscores, and hyphens.'
+            })
+        }
+
+        // Validate Password format
+        if (!PASSWORD_REGEX.test(password)) {
+            return res.status(400).json({
+                message: 'Password must be 8-64 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).'
+            })
         }
 
         const existingUser = await pool.query(
