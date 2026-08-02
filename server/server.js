@@ -88,6 +88,16 @@ app.use("/api", (req, res) => {
     });
 });
 
+// SPA Fallback Route: Serve index.html for client-side React routes
+app.use((req, res) => {
+    const indexPath = path.resolve('public', 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Page not found');
+    }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
