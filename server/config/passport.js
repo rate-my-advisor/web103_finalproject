@@ -20,7 +20,7 @@ const verifyFunction = async (accessToken, refreshToken, profile, done) => {
         const avatarUrl = profile.photos?.[0]?.value || null
 
         const existingUser = await pool.query(
-            'SELECT * FROM users WHERE github_id = $1',
+            'SELECT id, github_id, username, name, major, graduation_year, avatar_url, created_at FROM users WHERE github_id = $1',
             [githubId]
         )
 
@@ -29,7 +29,7 @@ const verifyFunction = async (accessToken, refreshToken, profile, done) => {
         }
 
         const newUser = await pool.query(
-            'INSERT INTO users (github_id, username, name, avatar_url) VALUES ($1, $2, $3, $4) RETURNING *',
+            'INSERT INTO users (github_id, username, name, avatar_url) VALUES ($1, $2, $3, $4) RETURNING id, github_id, username, name, major, graduation_year, avatar_url, created_at',
             [githubId, username, name, avatarUrl]
         )
 
@@ -47,7 +47,10 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await pool.query('SELECT * FROM users WHERE id = $1', [id])
+        const user = await pool.query(
+            'SELECT id, github_id, username, name, major, graduation_year, avatar_url, created_at FROM users WHERE id = $1',
+            [id]
+        )
         if (user.rows.length > 0) {
             done(null, user.rows[0])
         } else {
