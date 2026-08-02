@@ -162,10 +162,18 @@ const UniversityAdvisors = () => {
 
         {!loading && !error && visibleAdvisors.length > 0 && (
           <>
-            <p className="advisor-result-count" aria-live="polite">
-              {visibleAdvisors.length}{" "}
-              {visibleAdvisors.length === 1 ? "advisor" : "advisors"}
-            </p>
+            <div className="advisor-results-toolbar">
+              <p className="advisor-result-count" aria-live="polite">
+                {visibleAdvisors.length}{" "}
+                {visibleAdvisors.length === 1 ? "advisor" : "advisors"}
+              </p>
+
+              {/* add button to lead to advisor creation form */}
+              <Link to="/advisors/create" className="advisor-results-create-link">
+                  Create Advisor Profile
+              </Link>
+            </div>
+
             <section className="advisor-list" aria-label="University advisors">
               {visibleAdvisors.map((advisor) => (
               <Link
