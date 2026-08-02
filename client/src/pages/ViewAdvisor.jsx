@@ -81,7 +81,18 @@ const ViewAdvisor = () => {
         </section>
 
         <section className="reviews">
-          <h2>Reviews</h2>
+          <div className="reviews-header">
+            <h2>Reviews</h2>
+
+            {/* create review button to the right of the title "Reviews" */}
+            <Link
+              to={`/advisor/${id}/review`}
+              className="create-review-link"
+            >
+              Write a Review
+            </Link>
+          </div>
+
           {reviews.length === 0 ? (
             <p className="no-reviews-msg">No reviews written for this advisor yet.</p>
           ) : (
