@@ -16,8 +16,10 @@ const App = () => {
       path: "/university/:universityId/advisors",
       element: <UniversityAdvisors />,
     },
-    { path: "/advisor/:id", element: <ViewAdvisor /> },
-    { path: "/advisors/create", element: <CreateAdvisor /> },
+    {
+      path: "/advisors/create",
+      element: <CreateAdvisor />
+    },
     {
       path: "/advisor/:id",
       element: <ViewAdvisor /> ,
