@@ -56,4 +56,28 @@
   font-style: italic;
 }
 
+/* reviews header section add-on (create review button) */
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
 
+.reviews-header h2 {
+  margin: 0;
+}
+
+.reviews-header .create-review-link {
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  background-color: #343d88;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.reviews-header .create-review-link:hover {
+  opacity: 0.9;
+}

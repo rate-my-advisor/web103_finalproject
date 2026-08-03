@@ -3,17 +3,29 @@ import Home from "./pages/Home";
 import ViewAdvisor from "./pages/ViewAdvisor";
 import UniversityAdvisors from "./pages/UniversityAdvisors";
 import CreateAdvisor from "./pages/CreateAdvisor";
+import CreateReview from "./pages/CreateReview";
 import "./App.css";
 
 const App = () => {
   const element = useRoutes([
-    { path: "/", element: <Home /> },
+    {
+      path: "/",
+      element: <Home />,
+    },
     {
       path: "/university/:universityId/advisors",
       element: <UniversityAdvisors />,
     },
     { path: "/advisor/:id", element: <ViewAdvisor /> },
     { path: "/advisors/create", element: <CreateAdvisor /> },
+    {
+      path: "/advisor/:id",
+      element: <ViewAdvisor /> ,
+    },
+    {
+      path: "/advisor/:advisorId/review",
+      element: <CreateReview />,
+    }
   ]);
 
   return <div className="app">{element}</div>;
