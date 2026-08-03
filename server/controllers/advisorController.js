@@ -338,7 +338,7 @@ const updateAdvisor = async (req, res) => {
                     last_name = COALESCE($3, last_name),
                     email = COALESCE($4, email),
                     department = COALESCE ($5, department),
-                    office = COALESCE($6, office)
+                    office = CASE WHEN $6::text IS NULL THEN office ELSE NULLIF($6::text, '') END
                 WHERE advisor_id = $7
                 RETURNING *
             `,
@@ -358,7 +358,7 @@ const updateAdvisor = async (req, res) => {
                     : department.trim(),
                 office === undefined
                     ? null
-                    : office?.trim() || null,
+                    : (office === null ? "" : office.trim()),
                 advisorId
             ],
         )

@@ -20,9 +20,12 @@ const getReviewsByAdvisor = async (req, res) => {
         // most recent reviews first displayed on top of page
         const results = await pool.query(
             `
-                SELECT r.*, COALESCE(s.username, 'Anonymous') AS username
+                SELECT r.*,
+                       u.username,
+                       u.name,
+                       u.avatar_url
                 FROM reviews r
-                LEFT JOIN students s on r.student_id = s.student_id
+                LEFT JOIN users u ON r.user_id = u.id
                 WHERE r.advisor_id = $1
                 ORDER BY review_date DESC, review_id DESC
             `,
@@ -51,6 +54,7 @@ const createReview = async (req, res) => {
             would_recommend,
         } = req.body;
 
+        const userId = req.user?.id || null;
         const advisorId = Number(advisor_id);
         const overallRating = Number(overall_rating);
         const communicationRating = Number(communication_rating);
@@ -102,21 +106,36 @@ const createReview = async (req, res) => {
             });
         }
 
+        // Prevent duplicate reviews from logged-in users for the same advisor
+        if (userId) {
+            const existingReview = await pool.query(
+                `SELECT review_id FROM reviews WHERE advisor_id = $1 AND user_id = $2`,
+                [advisorId, userId]
+            );
+            if (existingReview.rows.length > 0) {
+                return res.status(400).json({
+                    message: "You have already submitted a review for this advisor.",
+                });
+            }
+        }
+
         const results = await pool.query(
             `
                 INSERT INTO reviews (
                     advisor_id,
+                    user_id,
                     overall_rating,
                     communication_rating,
                     availability_rating,
                     comment,
                     would_recommend
                 )
-                VALUES ($1, $2, $3, $4, $5, $6)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 RETURNING *
             `,
             [
                 advisorId,
+                userId,
                 overallRating,
                 communicationRating,
                 availabilityRating,
@@ -127,6 +146,13 @@ const createReview = async (req, res) => {
 
         return res.status(201).json(results.rows[0]);
     } catch (err) {
+        // Duplicate review constraint violation
+        if (err.code === "23505") {
+            return res.status(400).json({
+                message: "You have already submitted a review for this advisor.",
+            });
+        }
+
         // advisor_id doesn't reference existing row
         if (err.code === "23503") {
             return res.status(400).json({
@@ -260,26 +286,53 @@ const updateReview = async (req, res) => {
             });
         }
 
+        // Fetch the review first to check ownership
+        const reviewResult = await pool.query(
+            `SELECT user_id FROM reviews WHERE review_id = $1`,
+            [reviewId]
+        );
+
+        if (reviewResult.rows.length === 0) {
+            return res.status(404).json({
+                message: "Review not found",
+            });
+        }
+
+        const review = reviewResult.rows[0];
+
+        // Anonymous reviews (user_id IS NULL) cannot be edited by anyone
+        // Logged-in reviews can only be edited by their author
+        if (review.user_id === null || review.user_id !== req.user.id) {
+            return res.status(403).json({
+                message: "Forbidden. You can only edit your own reviews.",
+            });
+        }
+
         const results = await pool.query(
             `
-                UPDATE reviews
-                SET advisor_id = COALESCE($1, advisor_id),
-                    overall_rating = COALESCE($2, overall_rating),
-                    communication_rating = COALESCE($3, communication_rating),
-                    availability_rating = COALESCE($4, availability_rating),
-                    comment = COALESCE($5, comment),
-                    would_recommend = COALESCE($6, would_recommend)
-                WHERE review_id = $7
-                RETURNING *
+                WITH updated AS (
+                    UPDATE reviews
+                    SET advisor_id = COALESCE($1, advisor_id),
+                        overall_rating = COALESCE($2, overall_rating),
+                        communication_rating = COALESCE($3, communication_rating),
+                        availability_rating = COALESCE($4, availability_rating),
+                        comment = CASE WHEN $5::text IS NULL THEN comment ELSE NULLIF($5::text, '') END,
+                        would_recommend = COALESCE($6, would_recommend)
+                    WHERE review_id = $7
+                    RETURNING *
+                )
+                SELECT r.*, u.username, u.name, u.avatar_url
+                FROM updated r
+                LEFT JOIN users u ON r.user_id = u.id
             `,
             [
                 advisorId,
                 overallRating,
                 communicationRating,
                 availabilityRating,
-                comment === undefined || comment === null
+                comment === undefined
                     ? null
-                    : comment.trim(),
+                    : (comment === null ? "" : comment.trim()),
                 would_recommend === undefined
                     ? null
                     : would_recommend,
@@ -327,6 +380,28 @@ const deleteReview = async (req, res) => {
             });
         }
 
+        // Fetch the review first to check ownership
+        const reviewResult = await pool.query(
+            `SELECT user_id FROM reviews WHERE review_id = $1`,
+            [reviewId]
+        );
+
+        if (reviewResult.rows.length === 0) {
+            return res.status(404).json({
+                message: "Review not found",
+            });
+        }
+
+        const review = reviewResult.rows[0];
+
+        // Anonymous reviews (user_id IS NULL) cannot be deleted by anyone
+        // Logged-in reviews can only be deleted by their author
+        if (review.user_id === null || review.user_id !== req.user.id) {
+            return res.status(403).json({
+                message: "Forbidden. You can only delete your own reviews.",
+            });
+        }
+
         const results = await pool.query(
             `
                 DELETE FROM reviews
@@ -335,12 +410,6 @@ const deleteReview = async (req, res) => {
             `,
             [reviewId],
         );
-
-        if (results.rows.length === 0) {
-            return res.status(404).json({
-                message: "Review not found",
-            });
-        }
 
         return res.status(200).json({
             message: "Review deleted successfully",

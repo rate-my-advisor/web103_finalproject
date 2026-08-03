@@ -1,6 +1,7 @@
 .site-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   min-height: 90px;
   padding: 0 2rem;
   background: #30377d;
@@ -30,3 +31,66 @@
   font-size: 1.3rem;
   font-weight: 800;
 }
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-loading {
+  color: #a0aec0;
+  font-size: 0.9rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #56f0d5;
+}
+
+.user-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.auth-btn {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.login-btn {
+  background-color: #56f0d5;
+  color: #1a202c;
+}
+
+.login-btn:hover {
+  background-color: #3ee2c5;
+  transform: translateY(-1px);
+}
+
+.logout-btn {
+  background-color: transparent;
+  color: #e2e8f0;
+  border: 1px solid #4a5568;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+

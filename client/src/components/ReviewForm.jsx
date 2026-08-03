@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createReview } from "../api/advisors";
 import "../css/ReviewForm.css";
 
 // small component (rating 1 to 5)
@@ -68,22 +69,7 @@ const ReviewForm = ({ advisorId }) => {
             setIsSubmitting(true)
             console.log("Review is being submitted: ", reviewData)
 
-            const response = await fetch(
-                `/api/reviews`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(reviewData),
-                }
-            )
-
-            const result = await response.json()
-
-            if (!response.ok) {
-                throw new Error(result.message || "Unable to submit review.");
-            }
+            const result = await createReview(reviewData)
 
             console.log("Saved review:", result);
 
@@ -95,8 +81,8 @@ const ReviewForm = ({ advisorId }) => {
                 // through browser navigation by replacing current page
                 // in browder's history instead of adding a new history entry)
             navigate(`/advisor/${advisorId}`, { replace: true })
-        } catch {
-            setError("Unable to submit review. :(")
+        } catch (err) {
+            setError(err.message || "Unable to submit review. :(")
         } finally {
             setIsSubmitting(false)
         }
