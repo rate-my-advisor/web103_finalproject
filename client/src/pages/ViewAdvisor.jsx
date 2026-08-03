@@ -71,14 +71,26 @@ const ViewAdvisor = () => {
     );
   }
 
-  const handleReviewDeleted = (deletedId) => {
+  const handleReviewDeleted = async (deletedId) => {
     setReviews((prev) => prev.filter((r) => r.review_id !== deletedId));
+    try {
+      const updatedAdvisor = await getAdvisorById(id);
+      setAdvisor(updatedAdvisor);
+    } catch (err) {
+      console.error("Failed to refresh advisor details:", err);
+    }
   };
 
-  const handleReviewUpdated = (updatedReview) => {
+  const handleReviewUpdated = async (updatedReview) => {
     setReviews((prev) =>
       prev.map((r) => (r.review_id === updatedReview.review_id ? updatedReview : r))
     );
+    try {
+      const updatedAdvisor = await getAdvisorById(id);
+      setAdvisor(updatedAdvisor);
+    } catch (err) {
+      console.error("Failed to refresh advisor details:", err);
+    }
   };
 
   return (
