@@ -19,6 +19,8 @@ const AdvisorForm = ({ universities = [] }) => {
     const [error, setError] = useState("")
     const [universitySearch, setUniversitySearch] = useState("")
     const [isUniversityDropdownOpen, setIsUniversityDropdownOpen] = useState(false)
+    // for non-existing universities, allow user to create a new uni
+    const [createNewUniversity, setCreateNewUniversity] = useState(false);
 
     // update form to show user input change accordingly
     const handleChange = (event) => {
@@ -35,38 +37,80 @@ const AdvisorForm = ({ universities = [] }) => {
 
         setError("")
 
-        const advisorData = {
-            university_id: Number(formData.university_id),
-            first_name: formData.first_name.trim(),
-            last_name: formData.last_name.trim(),
-            email: formData.email.trim().toLowerCase(),
-            department: formData.department.trim(),
-            office: formData.office.trim() || null,
-        }
+        const typedUniversityName = universitySearch.trim()
 
-        if (
-            !Number.isInteger(advisorData.university_id) ||
-            advisorData.university_id <= 0
-        ) {
-            setError("Please select a valid university.")
+        if (!typedUniversityName) {
+            setError("Please enter or select a university.")
             return
         }
 
-        // require all fields to be filled out
-        if (
-            !advisorData.first_name ||
-            !advisorData.last_name ||
-            !advisorData.email ||
-            !advisorData.department
-        ) {
-            setError("Please complete all required fields.");
+        const firstName = formData.first_name.trim()
+        const lastName = formData.last_name.trim()
+        const email = formData.email.trim().toLowerCase()
+        const department = formData.department.trim()
+        const office = formData.office.trim()
+
+        if (!firstName || !lastName || !email || !department) {
+            setError("Please complete all required fields.")
             return
         }
 
         try {
             setIsSubmitting(true)
 
-            const response = await fetch("/api/advisors", {
+            // existing has ID, manually typed ones don't (bc they're new)
+            let universityId = Number(formData.university_id)
+
+            if (!Number.isInteger(universityId) || universityId <= 0) {
+                const universityResponse = await fetch("/api/universities", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ name: typedUniversityName }),
+                })
+
+                const universityResult = await universityResponse.json()
+                
+                if (!universityResponse.ok) {
+                    throw new Error(
+                        universityResult.message || "Unable to create university."
+                    )
+                }
+
+                universityId = universityResult.university_id ?? universityResult.id
+
+                if (!Number.isInteger(Number(universityId))) {
+                    throw new Error(
+                        "The university was created, but no university ID was returned."
+                    )
+                }
+
+                universityId = Number(universityId)
+            }
+
+            const advisorData = {
+                university_id: universityId,
+                first_name: firstName,
+                last_name: lastName,
+                email,
+                department,
+                office,
+            }
+
+            // require all fields to be filled out
+            if (
+                !advisorData.first_name ||
+                !advisorData.last_name ||
+                !advisorData.email ||
+                !advisorData.department
+            ) {
+                throw new Error("Please complete all required fields.");
+            }
+
+            setIsSubmitting(true)
+
+            const advisorResponse = await fetch("/api/advisors", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -74,20 +118,20 @@ const AdvisorForm = ({ universities = [] }) => {
                 body: JSON.stringify(advisorData),
             })
 
-            const result = await response.json()
+            const advisorResult = await advisorResponse.json()
 
-            if (!response.ok) {
+            if (!advisorResponse.ok) {
                 throw new Error(
-                    result.message || "Unable to create advisor profile."
+                    advisorResult.message || "Unable to create advisor profile."
                 );
             }
 
-            const createdAdvisorId = result.advisor_id ?? result.id
+            const createdAdvisorId = advisorResult.advisor_id ?? advisorResult.id
 
             if (!createdAdvisorId) {
                 throw new Error(
                     "The advisor was created, but no advisor ID was returned."
-                );
+                )
             }
 
             // redirect to the newly created advisor's profile page
@@ -109,10 +153,17 @@ const AdvisorForm = ({ universities = [] }) => {
         setUniversitySearch(typedName)
         setIsUniversityDropdownOpen(true)
 
-        // clear ID until user selects an existing university
+        const matchingUniversity = universities.find(
+            (university) =>
+            university.name.toLowerCase() ===
+            typedName.trim().toLowerCase()
+        );
+
         setFormData((previousData) => ({
             ...previousData,
-            university_id: "",
+            university_id: matchingUniversity
+                ? String(matchingUniversity.university_id)
+                : "",
         }))
     }
 
@@ -125,12 +176,23 @@ const AdvisorForm = ({ universities = [] }) => {
     const handleUniversitySelect = (university) => {
         setUniversitySearch(university.name)
         setIsUniversityDropdownOpen(false)
+        setCreateNewUniversity(false)
 
         setFormData((previousData) => ({
             ...previousData,
             university_id: String(university.university_id),
         }))
     }
+
+    const handleCreateUniversitySelect = () => {
+        setCreateNewUniversity(true);
+        setIsUniversityDropdownOpen(false);
+
+        setFormData((previousData) => ({
+            ...previousData,
+            university_id: "",
+        }));
+    };
 
     console.log("Universities received:", universities)
 
@@ -176,27 +238,39 @@ const AdvisorForm = ({ universities = [] }) => {
                             {filteredUniversities.length > 0 ? (
                                 filteredUniversities.map((university) => (
                                     <button
-                                        key={university.university_id}
-                                        className="university-dropdown-option"
-                                        type="button"
-                                        role="option"
-                                        onMouseDown={(event) => {
-                                            // Prevent the input from blurring before selection.
-                                            event.preventDefault();
-                                        }}
-                                        onClick={() =>
-                                            handleUniversitySelect(university)
-                                        }
-                                        >
-                                        {university.name}
+                                    key={university.university_id}
+                                    type="button"
+                                    className="university-dropdown-option"
+                                    onMouseDown={(event) => event.preventDefault()}
+                                    onClick={() => handleUniversitySelect(university)}
+                                    >
+                                    {university.name}
                                     </button>
                                 ))
-                                ) : (
-                                <p className="university-dropdown-empty">
-                                    No matching universities found.
-                                </p>
+                            ) : (
+                                <div className="university-dropdown-empty">
+                                    <p>No matching universities found.</p>
+
+                                    {universitySearch.trim() && (
+                                        <button
+                                            type="button"
+                                            className="create-university-option"
+                                            onMouseDown={(event) => event.preventDefault()}
+                                            onClick={handleCreateUniversitySelect}
+                                        >
+                                            + Add “{universitySearch.trim()}”
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </div>
+                    )}
+
+                    {createNewUniversity && (
+                        <p className="new-university-message">
+                            A new university named <strong>{universitySearch.trim()}</strong> will be
+                            created.
+                        </p>
                     )}
                 </div>
             </div>
