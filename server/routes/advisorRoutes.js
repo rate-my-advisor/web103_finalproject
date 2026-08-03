@@ -8,9 +8,9 @@ const router = express.Router()
 router.get("/", advisorController.getAdvisors)
 router.get("/:advisorId", advisorController.getAdvisorById)
 router.post("/", advisorController.createAdvisor)
+router.patch("/:advisorId", advisorController.updateAdvisor)
 
 // Protected endpoints (Require authentication to edit or delete)
-router.delete("/:advisorId", ensureAuthenticated, advisorController.deleteAdvisor)
-router.patch("/:advisorId", ensureAuthenticated, advisorController.updateAdvisor)
+// router.delete("/:advisorId", ensureAuthenticated, advisorController.deleteAdvisor)
 
 export default router

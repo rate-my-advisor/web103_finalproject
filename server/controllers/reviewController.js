@@ -52,10 +52,9 @@ const createReview = async (req, res) => {
             availability_rating,
             comment,
             would_recommend,
-            user_id
         } = req.body;
 
-        const userId = req.user?.id || (user_id ? Number(user_id) : null);
+        const userId = req.user?.id || null;
         const advisorId = Number(advisor_id);
         const overallRating = Number(overall_rating);
         const communicationRating = Number(communication_rating);
