@@ -1,3 +1,4 @@
+import './dotenv.js'
 import passport from 'passport'
 import { Strategy as GitHubStrategy } from 'passport-github2'
 import { pool } from './database.js'

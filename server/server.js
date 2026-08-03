@@ -1,8 +1,8 @@
+import './config/dotenv.js'
 import express from 'express'
 import path from 'path'
 import fs from 'fs'
 import favicon from 'serve-favicon'
-import dotenv from 'dotenv'
 import session from 'express-session'
 import passport from './config/passport.js'
 import cors from 'cors'
@@ -14,8 +14,6 @@ import universityRoutes from "./routes/universityRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import connectPgSimple from 'connect-pg-simple'
 import { pool } from './config/database.js'
-
-dotenv.config()
 
 const PORT = process.env.PORT || 3000
 const app = express();
