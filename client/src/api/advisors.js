@@ -1,7 +1,10 @@
-const API_BASE_URL = "http://localhost:3000";
+// Use a relative base URL so requests hit the same origin the app is served
+// from. In dev, Vite proxies /api to the local server; in production, the
+// server serves both the API and the built client, so /api resolves correctly.
+const API_BASE_URL = "";
 
-async function request(path) {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+async function request(path, options) {
+  const response = await fetch(`${API_BASE_URL}${path}`, options);
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
@@ -25,4 +28,12 @@ export function getAdvisorById(advisorId) {
 
 export function getReviewsByAdvisor(advisorId) {
   return request(`/api/reviews/advisor/${advisorId}`);
+}
+
+export function likeReview(reviewId) {
+  return request(`/api/reviews/${reviewId}/like`, { method: "PATCH" });
+}
+
+export function reportReview(reviewId) {
+  return request(`/api/reviews/${reviewId}/report`, { method: "PATCH" });
 }

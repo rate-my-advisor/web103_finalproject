@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { likeReview, reportReview } from "../api/advisors";
 import "../css/ReviewCard.css";
 
 const RatingBar = ({ label, value }) => {
@@ -28,6 +30,7 @@ const RatingBar = ({ label, value }) => {
 
 const ReviewCard = ({ review }) => {
   const {
+    review_id,
     username,
     overall_rating,
     communication_rating,
@@ -36,6 +39,45 @@ const ReviewCard = ({ review }) => {
     would_recommend,
     review_date,
   } = review;
+
+  const [likes, setLikes] = useState(review.likes ?? 0);
+  const [liked, setLiked] = useState(false);
+  const [reported, setReported] = useState(review.reported ?? false);
+  const [busy, setBusy] = useState(false);
+  const [actionError, setActionError] = useState("");
+
+  const handleLike = async () => {
+    if (liked || busy) return;
+
+    setBusy(true);
+    setActionError("");
+
+    try {
+      const updated = await likeReview(review_id);
+      setLikes(updated.likes);
+      setLiked(true);
+    } catch (err) {
+      setActionError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleReport = async () => {
+    if (reported || busy) return;
+
+    setBusy(true);
+    setActionError("");
+
+    try {
+      const updated = await reportReview(review_id);
+      setReported(updated.reported);
+    } catch (err) {
+      setActionError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const formattedDate = new Date(review_date).toLocaleDateString(undefined, {
     year: "numeric",
@@ -76,7 +118,29 @@ const ReviewCard = ({ review }) => {
         ) : (
           <span className="recommend-tag no">✗ Does Not Recommend</span>
         )}
+
+        <div className="review-actions">
+          <button
+            type="button"
+            className={`action-btn like-btn${liked ? " active" : ""}`}
+            onClick={handleLike}
+            disabled={liked || busy}
+          >
+            👍 Helpful ({likes})
+          </button>
+
+          <button
+            type="button"
+            className={`action-btn report-btn${reported ? " active" : ""}`}
+            onClick={handleReport}
+            disabled={reported || busy}
+          >
+            {reported ? "🚩 Reported" : "⚑ Report"}
+          </button>
+        </div>
       </div>
+
+      {actionError && <p className="review-action-error">{actionError}</p>}
     </div>
   );
 };

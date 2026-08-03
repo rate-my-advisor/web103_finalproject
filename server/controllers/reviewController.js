@@ -317,6 +317,80 @@ const updateReview = async (req, res) => {
     }
 };
 
+// Non-RESTful action: mark a review as helpful (increments its like count).
+const likeReview = async (req, res) => {
+    try {
+        const reviewId = Number(req.params.reviewId);
+
+        if (!Number.isInteger(reviewId) || reviewId <= 0) {
+            return res.status(400).json({
+                message: "Invalid review ID",
+            });
+        }
+
+        const results = await pool.query(
+            `
+                UPDATE reviews
+                SET likes = likes + 1
+                WHERE review_id = $1
+                RETURNING *
+            `,
+            [reviewId],
+        );
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({
+                message: "Review not found",
+            });
+        }
+
+        return res.status(200).json(results.rows[0]);
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Unable to like review",
+        });
+    }
+};
+
+// Non-RESTful action: flag a review as reported for inappropriate content.
+const reportReview = async (req, res) => {
+    try {
+        const reviewId = Number(req.params.reviewId);
+
+        if (!Number.isInteger(reviewId) || reviewId <= 0) {
+            return res.status(400).json({
+                message: "Invalid review ID",
+            });
+        }
+
+        const results = await pool.query(
+            `
+                UPDATE reviews
+                SET reported = TRUE
+                WHERE review_id = $1
+                RETURNING *
+            `,
+            [reviewId],
+        );
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({
+                message: "Review not found",
+            });
+        }
+
+        return res.status(200).json(results.rows[0]);
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Unable to report review",
+        });
+    }
+};
+
 const deleteReview = async (req, res) => {
     try {
         const reviewId = Number(req.params.reviewId);
@@ -359,5 +433,7 @@ export default {
   getReviewsByAdvisor,
   createReview,
   updateReview,
+  likeReview,
+  reportReview,
   deleteReview
 }
