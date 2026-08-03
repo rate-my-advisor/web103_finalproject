@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { deleteReview, updateReview } from "../api/advisors";
 import "../css/ReviewCard.css";
 
 const RatingBar = ({ label, value }) => {
@@ -86,15 +87,7 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
     }
 
     try {
-      const res = await fetch(`/api/reviews/${review.review_id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Unable to delete review.");
-      }
+      await deleteReview(review.review_id);
 
       if (onReviewDeleted) {
         onReviewDeleted(review.review_id);
@@ -110,25 +103,13 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
     setError("");
 
     try {
-      const res = await fetch(`/api/reviews/${review.review_id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          overall_rating: Number(editForm.overall_rating),
-          communication_rating: Number(editForm.communication_rating),
-          availability_rating: Number(editForm.availability_rating),
-          would_recommend: editForm.would_recommend === "true" || editForm.would_recommend === true,
-          comment: editForm.comment.trim(),
-        }),
+      const data = await updateReview(review.review_id, {
+        overall_rating: Number(editForm.overall_rating),
+        communication_rating: Number(editForm.communication_rating),
+        availability_rating: Number(editForm.availability_rating),
+        would_recommend: editForm.would_recommend === "true" || editForm.would_recommend === true,
+        comment: editForm.comment.trim(),
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Unable to update review.");
-      }
 
       setIsEditing(false);
       if (onReviewUpdated) {

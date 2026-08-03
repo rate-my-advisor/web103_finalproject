@@ -96,7 +96,8 @@ With Docker:
    PGDATABASE=your_database
    NODE_ENV=development
    PORT=3000
-   CLIENT_URL=your_frontend_url
+   VITE_API_URL="http://localhost:3000"
+   CLIENT_URL="http://localhost:5173"
    SESSION_SECRET=super_secret_rate_my_advisor_key
    GITHUB_CLIENT_ID=your_client_id
    GITHUB_CLIENT_SECRET=your_client_secret
@@ -124,7 +125,8 @@ Without Docker:
    PGDATABASE=your_database
    NODE_ENV=development
    PORT=3000
-   CLIENT_URL=your_frontend_url
+   VITE_API_URL="http://localhost:3000"
+   CLIENT_URL="http://localhost:5173"
    SESSION_SECRET=super_secret_rate_my_advisor_key
    GITHUB_CLIENT_ID=your_client_id
    GITHUB_CLIENT_SECRET=your_client_secret
