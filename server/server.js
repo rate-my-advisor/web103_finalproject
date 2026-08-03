@@ -12,6 +12,8 @@ import advisorRoutes from "./routes/advisorRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import universityRoutes from "./routes/universityRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import connectPgSimple from 'connect-pg-simple'
+import { pool } from './config/database.js'
 
 dotenv.config()
 
@@ -44,8 +46,16 @@ app.use(
 // Express Session Middleware
 const isHttps = process.env.COOKIE_SECURE === 'true';
 
+// Store sessions in postgres instead of RAM
+const PostgresStore = connectPgSimple(session);
+
 app.use(
-    session({
+  session({
+        store: new PostgresStore({
+          pool: pool,
+          tableName: 'session',
+          createTableIfMissing: true,
+        }),
         secret: process.env.SESSION_SECRET || 'secret_key_rate_my_advisor',
         resave: false,
         saveUninitialized: false,
