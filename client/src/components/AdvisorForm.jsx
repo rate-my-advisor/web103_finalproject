@@ -17,6 +17,8 @@ const AdvisorForm = ({ universities = [] }) => {
     const [formData, setFormData] = useState(initialFormData)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState("")
+    const [universitySearch, setUniversitySearch] = useState("")
+    const [isUniversityDropdownOpen, setIsUniversityDropdownOpen] = useState(false)
 
     // update form to show user input change accordingly
     const handleChange = (event) => {
@@ -80,7 +82,7 @@ const AdvisorForm = ({ universities = [] }) => {
                 );
             }
 
-            const createdAdvisorId = result.advisor_id ?? result.id;
+            const createdAdvisorId = result.advisor_id ?? result.id
 
             if (!createdAdvisorId) {
                 throw new Error(
@@ -101,6 +103,37 @@ const AdvisorForm = ({ universities = [] }) => {
         }
     }
 
+    const handleUniversityChange = (event) => {
+        const typedName = event.target.value
+
+        setUniversitySearch(typedName)
+        setIsUniversityDropdownOpen(true)
+
+        // clear ID until user selects an existing university
+        setFormData((previousData) => ({
+            ...previousData,
+            university_id: "",
+        }))
+    }
+
+    const filteredUniversities = universities.filter((university) =>
+        university.name
+            .toLowerCase()
+            .includes(universitySearch.trim().toLowerCase())
+    )
+
+    const handleUniversitySelect = (university) => {
+        setUniversitySearch(university.name)
+        setIsUniversityDropdownOpen(false)
+
+        setFormData((previousData) => ({
+            ...previousData,
+            university_id: String(university.university_id),
+        }))
+    }
+
+    console.log("Universities received:", universities)
+
     return (
         <form className="advisor-form" onSubmit={handleSubmit}>
             <div className="advisor-form-section">
@@ -108,26 +141,64 @@ const AdvisorForm = ({ universities = [] }) => {
                     University
                 </label>
 
-                <p>Select the university where this advisor works.</p>
+                <p>
+                    Start typing the university name, then select it from the results.
+                </p>
 
-                <select
-                    id="advisor-university"
-                    name="university_id"
-                    value={formData.university_id}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Select a university</option>
+                <div className="university-combobox">
+                    <input
+                        id="advisor-university"
+                        type="text"
+                        value={universitySearch}
+                        onChange={handleUniversityChange}
+                        onFocus={() => setIsUniversityDropdownOpen(true)}
+                        onBlur={() => {
+                            // Allows a dropdown option to receive the click first.
+                            window.setTimeout(() => {
+                                setIsUniversityDropdownOpen(false)
+                            }, 150)
+                        }}
+                        placeholder="Search for a university"
+                        autoComplete="off"
+                        role="combobox"
+                        aria-autocomplete="list"
+                        aria-expanded={isUniversityDropdownOpen}
+                        aria-controls="university-results"
+                        required
+                    />
 
-                    {universities.map((university) => (
-                        <option
-                            key={university.university_id}
-                            value={university.university_id}
-                            >
-                            {university.name}
-                        </option>
-                    ))}
-                </select>
+                    {isUniversityDropdownOpen && (
+                        <div
+                            id="university-results"
+                            className="university-dropdown"
+                            role="listbox"
+                        >
+                            {filteredUniversities.length > 0 ? (
+                                filteredUniversities.map((university) => (
+                                    <button
+                                        key={university.university_id}
+                                        className="university-dropdown-option"
+                                        type="button"
+                                        role="option"
+                                        onMouseDown={(event) => {
+                                            // Prevent the input from blurring before selection.
+                                            event.preventDefault();
+                                        }}
+                                        onClick={() =>
+                                            handleUniversitySelect(university)
+                                        }
+                                        >
+                                        {university.name}
+                                    </button>
+                                ))
+                                ) : (
+                                <p className="university-dropdown-empty">
+                                    No matching universities found.
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* placeholder fake example: Jane Smith, CS major, and their email */}

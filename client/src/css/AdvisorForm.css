@@ -75,6 +75,10 @@
   cursor: pointer;
 }
 
+#advisor-university {
+  cursor: text;
+}
+
 .advisor-form input::placeholder {
   color: #98a2b3;
 }
@@ -192,4 +196,55 @@
   .advisor-name-fields {
     grid-template-columns: 1fr;
   }
+}
+
+/* add dropdown */
+.university-combobox {
+  position: relative;
+}
+
+.university-dropdown {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  left: 0;
+
+  max-height: 240px;
+  padding: 0.4rem;
+  overflow-y: auto;
+
+  border: 1px solid #cfd5e1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgb(15 23 42 / 14%);
+}
+
+.university-dropdown-option {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+
+  color: #111827;
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.university-dropdown-option:hover,
+.university-dropdown-option:focus-visible {
+  background-color: #eef2ff;
+  color: #30377d;
+  outline: none;
+}
+
+.university-dropdown-empty {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  color: #667085;
 }
