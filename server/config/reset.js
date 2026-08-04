@@ -17,13 +17,30 @@ const resetDatabase = async () => {
         await client.query("BEGIN");
 
         // drop child tables before parent tables
-        // reminder: reviews depend on advisors/students,
+        // reminder: reviews depend on advisors/users
         //           advisors depend on universities
         await client.query(`
             DROP TABLE IF EXISTS reviews;
             DROP TABLE IF EXISTS advisors;
             DROP TABLE IF EXISTS students;
             DROP TABLE IF EXISTS universities;
+            DROP TABLE IF EXISTS users;
+            DROP TABLE IF EXISTS "session";
+        `);
+
+        // create unified users table (student account profile)
+        await client.query(`
+            CREATE TABLE users (
+                id SERIAL PRIMARY KEY,
+                github_id VARCHAR(255) UNIQUE,
+                username VARCHAR(255) NOT NULL UNIQUE,
+                password_hash VARCHAR(255),
+                name VARCHAR(255),
+                major VARCHAR(255),
+                graduation_year INTEGER,
+                avatar_url TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `);
 
         // create parent tables first
@@ -31,15 +48,6 @@ const resetDatabase = async () => {
             CREATE TABLE universities (
                 university_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL UNIQUE
-            );
-        `);
-
-        await client.query(`
-            CREATE TABLE students (
-                student_id SERIAL PRIMARY KEY,
-                username VARCHAR(100) NOT NULL UNIQUE,
-                major VARCHAR(255) NOT NULL,
-                graduation_year INTEGER NOT NULL
             );
         `);
 
@@ -60,13 +68,12 @@ const resetDatabase = async () => {
             );
         `);
 
-        // reviews connected to exisitng advisor/student
-        // for now removed NOT NULL from student_id bc we don't have accounts yet
+        // reviews connected to existing advisor & user
         await client.query(`
             CREATE TABLE reviews (
                 review_id SERIAL PRIMARY KEY,
                 advisor_id INTEGER NOT NULL,
-                student_id INTEGER,
+                user_id INTEGER,
                 overall_rating INTEGER NOT NULL
                     CHECK (overall_rating BETWEEN 1 AND 5),
                 communication_rating INTEGER NOT NULL
@@ -81,11 +88,15 @@ const resetDatabase = async () => {
                 reported BOOLEAN NOT NULL DEFAULT FALSE,
 
                 FOREIGN KEY (advisor_id)
-                    REFERENCES advisors(advisor_id),
+                    REFERENCES advisors(advisor_id) ON DELETE CASCADE,
 
-                FOREIGN KEY (student_id)
-                    REFERENCES students(student_id)
+                FOREIGN KEY (user_id)
+                    REFERENCES users(id) ON DELETE SET NULL
             );
+
+            CREATE UNIQUE INDEX IF NOT EXISTS unique_user_advisor_review
+            ON reviews (advisor_id, user_id)
+            WHERE user_id IS NOT NULL;
         `);
 
         // Create trigger to recalculate advisor rating on update
@@ -126,12 +137,31 @@ const resetDatabase = async () => {
             EXECUTE FUNCTION update_advisor_rating();
         `);
 
+        // Insert seed universities and advisors for instant testing
+        await client.query(`
+            INSERT INTO universities (name) VALUES
+            ('Harvard University'),
+            ('Stanford University'),
+            ('Massachusetts Institute of Technology'),
+            ('University of California, Berkeley'),
+            ('Columbia University');
+
+            INSERT INTO advisors (university_id, first_name, last_name, email, department, office) VALUES
+            (1, 'Sarah', 'Conner', 'sconner@harvard.edu', 'Computer Science', 'Maxwell Dworkin 214'),
+            (1, 'David', 'Malan', 'dmalan@harvard.edu', 'Computer Science', 'Science Center 102'),
+            (2, 'Andrew', 'Ng', 'ang@stanford.edu', 'Artificial Intelligence', 'Gates Building 154'),
+            (2, 'Jennifer', 'Widom', 'jwidom@stanford.edu', 'Computer Science', 'Packard Building 202'),
+            (3, 'Gilbert', 'Strang', 'gstrang@mit.edu', 'Mathematics', 'Building 2-265'),
+            (4, 'Michael', 'Jordan', 'jordan@berkeley.edu', 'Data Science', 'Soda Hall 387'),
+            (5, 'Jeannette', 'Wing', 'jwing@columbia.edu', 'Computer Science', 'Mudd Hall 450');
+        `);
+
         // COMMIT means every query succeeded, so save all changes
         await client.query("COMMIT");
 
         console.log("✅ Database tables reset successfully");
         console.log("✅ universities table created");
-        console.log("✅ students table created");
+        console.log("✅ users table created");
         console.log("✅ advisors table created");
         console.log("✅ reviews table created");
         console.log("ℹ️ Tables are empty and ready for user input");
@@ -147,7 +177,7 @@ const resetDatabase = async () => {
             // return the specific db connection back to pool
             client.release();
         }
-        
+
         // shut down the entire connection pool (for resource cleanup and efficiency)
         await pool.end();
     }

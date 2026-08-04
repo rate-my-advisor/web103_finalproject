@@ -10,24 +10,32 @@ Designed and developed by: Kaylie Chang, Mohtashim Syed, Alex Gong, Justin Wong,
 
 ### Description and Purpose
 
-Rate My Advisor is an app where students can find, review, and rate academic advisors based on helpfulness availability, communication, and overall support.
+Rate My Advisor is an app where students can find, review, and rate academic
+advisors based on helpfulness, availability, communication, and overall
+support.
 
 ### Inspiration
 
-The inspiration stems from negative personal experience with advisors in the past. I (Fiyin) wish I could have had a system in place to get an idea of the type of advisor I (Fiyin) had available before hand, like rate my professor so this idea is inspired from that. 
+The project was inspired by personal experiences with academic advising. We
+wanted students to have a place—similar to Rate My Professors—where they can
+learn from one another before choosing an advisor.
 
 ## Tech Stack
 
 Frontend:
+
 - React
+- React Router
 - CSS
-- JS
+- JavaScript
 - HTML
 
 Backend:
+
 - Express
 - PostgreSQL (Render)
-- JS
+- Passport.js with local and GitHub authentication
+- JavaScript
 
 ## Features
 
@@ -45,29 +53,35 @@ the current average rating, student reviews, and recommendation percentage.
 
 ![Advisor profile demo](client/src/assets/advisor-profile.gif)
 
-### (3) Allow user to add new advisors
+### (3) Allow users to add new advisors
 
-Users can add advisors to the website via a form if they are not already added
+Planned: users will be able to add an advisor through a form when that advisor
+is not already listed. This work is still in progress in issue #19 and PR #33.
 
-[gif goes here]
+Demo GIF pending implementation.
 
-### (4) User can rate advisor and explain why
+### (4) ✅ Users can create, edit, and delete their own advisor reviews
 
-User can rate the advisor out of 5 stars and explain why they believe that the advisor deserves that score.
+Users can rate an advisor across overall, communication, and availability
+categories, explain their rating, and state whether they recommend the advisor.
+Authenticated authors can edit or delete their own reviews.
 
-[gif goes here]
+Demo GIF still needs to be recorded.
 
 ### (5) Likes on Comments
 
-Allow users mark reviews as helpful so that the best reviews are appear first
+Planned: authenticated users will be able to like and unlike reviews. The
+implementation is currently in draft PR #34.
 
-[gif goes here]
+Demo GIF pending implementation.
 
 ### (6) Report Button
 
-Report button for review on foul and abusive language
+Planned: users will be able to persistently report inappropriate reviews. The
+button on `main` currently shows a confirmation only; it does not save a report
+to PostgreSQL or hide the review.
 
-[gif goes here]
+Demo GIF pending implementation.
 
 ### (7) ✅ Average grades are applied on advisors overall ratings for quick student viewing
 
@@ -75,7 +89,19 @@ Students can search for good advisors quickly by viewing the average grade given
 
 ![Advisor rating summary demo](client/src/assets/advisor-profile.gif)
 
-### [ADDITIONAL FEATURES GO HERE - ADD ALL FEATURES HERE IN THE FORMAT ABOVE; you will check these off and add gifs as you complete them]
+### (8) ✅ Search, filter, and sort advisors
+
+Students can search for a university, then filter and sort the matching advisor
+list without leaving the page.
+
+![University search and advisor filtering demo](client/src/assets/university-advisor-list.gif)
+
+### (9) Authentication and review ownership
+
+The app supports local accounts, sessions stored in PostgreSQL, GitHub OAuth,
+and owner-only review edits and deletions. Local authentication is implemented.
+The deployed GitHub OAuth callback still needs to be corrected before this
+feature is considered production-ready.
 
 ## Installation Instructions
 
@@ -84,14 +110,9 @@ Requirements:
 - Node.js 20 or newer
 - A PostgreSQL database
 
-1. Install the frontend and server dependencies:
+With Docker:
 
-   ```bash
-   cd client && npm ci
-   cd ../server && npm ci
-   ```
-
-2. Create `server/.env` with your PostgreSQL connection values:
+1. Create `server/.env` with the server and PostgreSQL settings:
 
    ```text
    PGUSER=your_user
@@ -101,20 +122,72 @@ Requirements:
    PGDATABASE=your_database
    NODE_ENV=development
    PORT=3000
+   CLIENT_URL="http://localhost:5173"
+   SESSION_SECRET=super_secret_rate_my_advisor_key
+   GITHUB_CLIENT_ID=your_client_id
+   GITHUB_CLIENT_SECRET=your_client_secret
+   GITHUB_CALLBACK_URL=your_callback_url
    ```
 
-3. Create the database tables:
+2. Run:
+
+   ```bash
+   docker compose up --build
+   ```
+
+Without Docker:
+
+1. Install the frontend and server dependencies:
+
+   ```bash
+   cd client && npm ci
+   cd ../server && npm ci
+   ```
+
+2. Create `server/.env` with the server and PostgreSQL settings:
+
+   ```text
+   PGUSER=your_user
+   PGPASSWORD=your_password
+   PGHOST=your_host
+   PGPORT=5432
+   PGDATABASE=your_database
+   NODE_ENV=development
+   PORT=3000
+   CLIENT_URL="http://localhost:5173"
+   SESSION_SECRET=super_secret_rate_my_advisor_key
+   GITHUB_CLIENT_ID=your_client_id
+   GITHUB_CLIENT_SECRET=your_client_secret
+   GITHUB_CALLBACK_URL=your_callback_url
+   ```
+
+3. Create `client/.env` so the Vite development server can reach the API:
+
+   ```text
+   VITE_API_URL=http://localhost:3000
+   ```
+
+4. Create the database tables:
 
    ```bash
    cd server
    npm run reset
    ```
 
-4. Start the API and frontend in separate terminals:
+5. Start the API and frontend in separate terminals:
 
    ```bash
    cd server && npm run dev
    cd client && npm run dev
    ```
 
-5. Open the local URL printed by Vite.
+6. Open the local URL printed by Vite.
+
+## Current Limitations
+
+- The deployed GitHub OAuth flow redirects to the old auth preview callback and
+  must be updated to use `https://server-bncl.onrender.com/auth/github/callback`.
+- Advisor creation is still in PR #33 and currently conflicts with `main`.
+- Persistent likes and reports are not on `main`; PRs #32 and #34 overlap and
+  need to be reconciled.
+- The final feature GIFs and complete walkthrough GIF still need to be recorded.

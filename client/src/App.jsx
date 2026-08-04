@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import ViewAdvisor from "./pages/ViewAdvisor";
 import UniversityAdvisors from "./pages/UniversityAdvisors";
 import CreateAdvisor from "./pages/CreateAdvisor";
+import Login from "./pages/Login";
 import CreateReview from "./pages/CreateReview";
 import "./App.css";
 
@@ -11,6 +12,10 @@ const App = () => {
     {
       path: "/",
       element: <Home />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
     },
     {
       path: "/university/:universityId/advisors",
@@ -22,12 +27,12 @@ const App = () => {
     },
     {
       path: "/advisor/:id",
-      element: <ViewAdvisor /> ,
+      element: <ViewAdvisor />,
     },
     {
       path: "/advisor/:advisorId/review",
       element: <CreateReview />,
-    }
+    },
   ]);
 
   return <div className="app">{element}</div>;

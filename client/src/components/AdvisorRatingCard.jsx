@@ -28,7 +28,17 @@ const AdvisorRatingCard = ({ advisor, reviews = [] }) => {
   const recommendPercent =
     reviews.length > 0 ? Math.round((recommendCount / reviews.length) * 100) : null;
 
-  const numericRating = advisor.rating != null ? Number(advisor.rating) : null;
+  const computedRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + Number(r.overall_rating), 0) / reviews.length
+      : null;
+
+  const numericRating =
+    computedRating !== null
+      ? computedRating
+      : advisor.rating != null
+      ? Number(advisor.rating)
+      : null;
 
   return (
     <div className="rating-column">

@@ -37,12 +37,35 @@
   flex-direction: column;
 }
 
-/* Reviews List Section */
-.reviews h2 {
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.reviews-header h2 {
   font-size: 1.4rem;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 16px;
+  margin: 0;
+}
+
+.add-review-btn {
+  background-color: #30377d;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.add-review-btn:hover {
+  background-color: #232860;
+  transform: translateY(-1px);
 }
 
 .reviews {

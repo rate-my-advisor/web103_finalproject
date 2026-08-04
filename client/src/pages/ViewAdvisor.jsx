@@ -22,12 +22,12 @@ const ViewAdvisor = () => {
 
     const loadAdvisor = async () => {
       try {
-        const [advisor, reviews] = await Promise.all([
+        const [advisorData, reviewsData] = await Promise.all([
           getAdvisorById(id),
           getReviewsByAdvisor(id),
         ]);
-        setAdvisor(advisor);
-        setReviews(reviews);
+        setAdvisor(advisorData);
+        setReviews(reviewsData);
       } catch (error) {
         setError(error.message);
       }
@@ -71,6 +71,28 @@ const ViewAdvisor = () => {
     );
   }
 
+  const handleReviewDeleted = async (deletedId) => {
+    setReviews((prev) => prev.filter((r) => r.review_id !== deletedId));
+    try {
+      const updatedAdvisor = await getAdvisorById(id);
+      setAdvisor(updatedAdvisor);
+    } catch (err) {
+      console.error("Failed to refresh advisor details:", err);
+    }
+  };
+
+  const handleReviewUpdated = async (updatedReview) => {
+    setReviews((prev) =>
+      prev.map((r) => (r.review_id === updatedReview.review_id ? updatedReview : r))
+    );
+    try {
+      const updatedAdvisor = await getAdvisorById(id);
+      setAdvisor(updatedAdvisor);
+    } catch (err) {
+      console.error("Failed to refresh advisor details:", err);
+    }
+  };
+
   return (
     <>
       <SiteHeader />
@@ -84,7 +106,6 @@ const ViewAdvisor = () => {
           <div className="reviews-header">
             <h2>Reviews</h2>
 
-            {/* create review button to the right of the title "Reviews" */}
             <Link
               to={`/advisor/${id}/review`}
               className="create-review-link"
@@ -97,7 +118,12 @@ const ViewAdvisor = () => {
             <p className="no-reviews-msg">No reviews written for this advisor yet.</p>
           ) : (
             reviews.map((review, index) => (
-              <ReviewCard key={index} review={review} />
+              <ReviewCard
+                key={review.review_id || index}
+                review={review}
+                onReviewDeleted={handleReviewDeleted}
+                onReviewUpdated={handleReviewUpdated}
+              />
             ))
           )}
         </section>
