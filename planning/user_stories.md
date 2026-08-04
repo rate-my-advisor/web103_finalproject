@@ -24,7 +24,7 @@ Advisor
 
 4. As a student, I want to submit a rating and review for an advisor, so that I can share my experience with other students.
 
-5. As a student, I want to upvote or downvote student reviews, so that the most helpful reviews are easier for others to find.
+5. As a student, I want to like or unlike student reviews, so that the most helpful reviews are easier for others to find.
 
 6. As a student, I want report inappropriate or disrespectful reviews, so that the site remains useful, respectful, and safe.
 

@@ -4,15 +4,16 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 
 ## List of Pages
 
-[👉🏾👉🏾👉🏾 List the pages you expect to have in your app, with a ⭐ next to pages you have wireframed]
+- ⭐ Homepage with university search
+- ⭐ University advisor listing with search, filter, and sort controls
+- ⭐ Advisor profile with ratings and student reviews
+- Review creation page
+- Login and account registration page
+- Advisor creation page (in progress)
 
-⭐ Listing all advisors of a specific university (in alphabetical order)
-⭐ Advisor profile page with all comments/ratings below
-- Comment page
-⭐ Default main page (search for university)
+Planned stretch page:
 
-Stretch feat. pages:
-- Compare page (stretch)
+- Advisor comparison page
 
 ## Wireframe 1: Homepage
 

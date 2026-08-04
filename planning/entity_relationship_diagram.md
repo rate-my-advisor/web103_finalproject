@@ -7,6 +7,10 @@
 - **advisors** — Academic advisors who can be reviewed
 - **reviews** — Reviews written by users for advisors
 
+The diagram below reflects the schema currently merged into `main`. Draft PR
+#34 proposes a `review_likes` join table, but that table is not counted here
+until the PR is merged.
+
 ## Entity Relationship Diagram
 
 ```mermaid
@@ -115,3 +119,9 @@ erDiagram
 | `reported` | boolean | Not null, defaults to false |
 
 > **Unique constraint:** A logged-in student may only submit one review per advisor (`UNIQUE (advisor_id, user_id) WHERE user_id IS NOT NULL`).
+
+## Pending Schema Work
+
+Draft PR #34 adds a `review_likes` table joining `users` and `reviews`. If that
+PR is merged, update this ERD to include the many-to-many relationship and then
+check the corresponding Milestone 5 rubric item.

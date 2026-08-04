@@ -2,8 +2,8 @@
 
 ## Milestone 4 Completion
 
-Current completion percentage for Milestone 4 - Unit 8: 67% (6 closed items
-and 3 open items).
+Final completion percentage for Milestone 4 - Unit 8: 100% (9 closed issues
+and 0 open issues as of August 4, 2026).
 
 List each issue you completed this unit and the main file or folder where that work lives, one per line:
 
@@ -14,7 +14,7 @@ List each issue you completed this unit and the main file or folder where that w
 - #21 Add average grade to advisor profile —
   `client/src/components/AdvisorRatingCard.jsx`, `server/config/reset.js`
 
-Completed locally and ready for review:
+Completed and merged through PR #25:
 
 - #9 Add homepage university search and navigation —
   `client/src/pages/Home.jsx`, `client/src/css/Home.css`
@@ -23,8 +23,8 @@ Completed locally and ready for review:
 - #20 Add filtering and sorting to the advisor list —
   `client/src/pages/UniversityAdvisors.jsx`
 
-Issue #17 remains open until the feature work is reviewed and this report can
-record the final 100% milestone status.
+Issue #17 was closed as not planned on August 3, 2026. GitHub nevertheless
+reports the Milestone 4 milestone at 100% because it has no open issues.
 
 ## Features Completed This Unit
 

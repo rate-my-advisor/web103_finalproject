@@ -8,11 +8,11 @@ This unit, be sure to complete all tasks listed below. To complete a task, place
 
 - [x] Deploy your project on Render
   - [x] In `readme.md`, add the link to your deployed project
-- [ ] Update the status of issues in your project board as you complete them
-- [ ] In `readme.md`, check off the features you have completed in this unit by adding a ✅ emoji in front of their title
+- [x] Update the status of issues in your project board as you complete them
+- [x] In `readme.md`, check off the features you have completed in this unit by adding a ✅ emoji in front of their title
   - [ ] Under each feature you have completed, **include a GIF** showing feature functionality
-- [ ] In this document, complete the **Reflection** section below
-- [ ] 🚩🚩🚩**Complete the Final Project Feature Checklist section below**, detailing each feature you completed in the project (ONLY include features you implemented, not features you planned)
+- [x] In this document, complete the **Reflection** section below
+- [x] 🚩🚩🚩**Complete the Final Project Feature Checklist section below**, detailing each feature you completed in the project (ONLY include features you implemented, not features you planned)
 - [ ] 🚩🚩🚩**Record a GIF showing a complete run-through of your app** that displays all the components included in the **Final Project Feature Checklist** below
   - [ ] Include this GIF in the **Final Demo GIF** section below
 
@@ -26,50 +26,58 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 
 - [x] The project includes an Express backend app and a React frontend app
 - [ ] The project includes these backend-specific features:
-  - [x] At least one of each of the following database relationships in Postgres
+  - [ ] At least one of each of the following database relationships in Postgres
     - [x] one-to-many
-    - [x] many-to-many with a join table
-  - [ ] A well-designed RESTful API that:
-    - [ ] supports all four main request types for a single entity (ex. tasks in a to-do list app): GET, POST, PATCH, and DELETE
-      - [ ] the user can **view** items, such as tasks
-      - [ ] the user can **create** a new item, such as a task
-      - [ ] the user can **update** an existing item by changing some or all of its values, such as changing the title of task
-      - [ ] the user can **delete** an existing item, such as a task
+    - [ ] many-to-many with a join table
+      - The `review_likes` join table is proposed in draft PR #34 but is not on `main` yet.
+  - [x] A well-designed RESTful API that:
+    - [x] supports all four main request types for reviews: GET, POST, PATCH, and DELETE
+      - [x] the user can **view** reviews
+      - [x] the user can **create** a review
+      - [x] the user can **update** their own review
+      - [x] the user can **delete** their own review
     - [x] Routes follow proper naming conventions
   - [x] The web app includes the ability to reset the database to its default state
-- [ ] The project includes these frontend-specific features:
-  - [ ] At least one redirection, where users are able to navigate to a new page with a new URL within the app
-  - [ ] At least one interaction that the user can initiate and complete on the same page without navigating to a new page
+- [x] The project includes these frontend-specific features:
+  - [x] At least one redirection, where users are able to navigate to a new page with a new URL within the app
+  - [x] At least one interaction that the user can initiate and complete on the same page without navigating to a new page
   - [x] Dynamic frontend routes created with React Router
   - [x] Hierarchically designed React components
     - [x] Components broken down into categories, including Page and Component types
     - [x] Corresponding container components and presenter components as appropriate
-- [ ] The project includes dynamic routes for both frontend and backend apps
+- [x] The project includes dynamic routes for both frontend and backend apps
 - [ ] The project is deployed on Render with all pages and features that are visible to the user are working as intended
+  - The app and direct frontend routes load, but the deployed GitHub OAuth redirect still points to the old auth preview callback.
 
 ### Custom Features
 
 👉🏾👉🏾👉🏾 Check off each completed feature below.
 
-- [ ] The project gracefully handles errors
-- [x] The project includes a one-to-one database relationship
+- [x] The project gracefully handles errors
+- [ ] The project includes a one-to-one database relationship
 - [ ] The project includes a slide-out pane or modal as appropriate for your use case that pops up and covers the page content without navigating away from the current page
 - [ ] The project includes a unique field within the join table
-- [ ] The project includes a custom non-RESTful route with corresponding controller actions
+- [x] The project includes a custom non-RESTful route with corresponding controller actions
+  - Authentication uses custom register, login, logout, GitHub OAuth, and current-user routes.
 - [x] The user can filter or sort items based on particular criteria as appropriate for your use case
-- [ ] Data is automatically generated in response to a certain event or user action. Examples include generating a default inventory for a new user starting a game or creating a starter set of tasks for a user creating a new task app account
-- [ ] Data submitted via a POST or PATCH request is validated before the database is updated (e.g. validating that an event is in the future before allowing a new event to be created)
+- [x] Data is automatically generated in response to a certain event or user action. Examples include generating a default inventory for a new user starting a game or creating a starter set of tasks for a user creating a new task app account
+  - Registering a local user generates a default DiceBear avatar URL.
+- [x] Data submitted via a POST or PATCH request is validated before the database is updated (e.g. validating that an event is in the future before allowing a new event to be created)
   - [ ] *To receive full credit, please be sure to demonstrate in your walkthrough that for certain inputs, the item will NOT be successfully created or updated.*
 
 ### Stretch Features
 
 👉🏾👉🏾👉🏾 Check off each completed feature below.
 
-- [x] A subset of pages require the user to log in before accessing the content
-  - [x] Users can log in and log out via GitHub OAuth with Passport.js
-- [ ] Restrict available user options dynamically, such as restricting available purchases based on a user's currency
+- [ ] A subset of pages require the user to log in before accessing the content
+  - Review edit/delete API actions require authentication, but the frontend routes themselves are not protected.
+  - [ ] Users can log in and log out via GitHub OAuth with Passport.js
+    - The code is present, but the production OAuth callback is currently misconfigured.
+- [x] Restrict available user options dynamically, such as restricting available purchases based on a user's currency
+  - Edit and delete controls are shown only to the signed-in author of a review.
 - [ ] Show a spinner while a page or page element is loading
 - [ ] Disable buttons and inputs during the form submission process
+  - Submit buttons are disabled while review and login requests run, but the corresponding inputs remain enabled.
 - [ ] Disable buttons after they have been clicked
   - *At least 75% of buttons in your app must exhibit this behavior to receive full credit*
 - [ ] Users can upload images to the app and have them be stored on a cloud service
@@ -80,7 +88,7 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 
 ## Final Demo GIF
 
-🔗 [Here's a GIF walkthrough of the final project](👉🏾👉🏾👉🏾 your link here)
+The final walkthrough GIF has not been recorded yet.
 
 ## Reflection
 
