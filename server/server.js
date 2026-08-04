@@ -14,6 +14,7 @@ import universityRoutes from "./routes/universityRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import connectPgSimple from 'connect-pg-simple'
 import { pool } from './config/database.js'
+import { ensureDatabaseSchema } from './config/ensureSchema.js'
 
 const PORT = process.env.PORT || 3000
 const app = express();
@@ -106,6 +107,8 @@ app.use((req, res) => {
     }
 });
 
+
+await ensureDatabaseSchema()
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

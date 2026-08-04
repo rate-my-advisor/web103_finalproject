@@ -8,7 +8,10 @@ const router = express.Router()
 router.get("/advisor/:advisorId", reviewController.getReviewsByAdvisor)
 router.post("/", reviewController.createReview)
 
-// Protected endpoints (Require owner/admin auth to modify/delete)
+// Protected endpoints
+router.patch("/:reviewId/like", ensureAuthenticated, reviewController.toggleReviewLike)
+
+// Review authors can modify or delete only their own reviews
 router.delete("/:reviewId", ensureAuthenticated, reviewController.deleteReview)
 router.patch("/:reviewId", ensureAuthenticated, reviewController.updateReview)
 

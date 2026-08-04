@@ -23,13 +23,24 @@ const getReviewsByAdvisor = async (req, res) => {
                 SELECT r.*,
                        u.username,
                        u.name,
-                       u.avatar_url
+                       u.avatar_url,
+                       (
+                           SELECT COUNT(*)::integer
+                           FROM review_likes rl
+                           WHERE rl.review_id = r.review_id
+                       ) AS likes,
+                       EXISTS (
+                           SELECT 1
+                           FROM review_likes rl
+                           WHERE rl.review_id = r.review_id
+                             AND rl.user_id = $2::integer
+                       ) AS liked_by_user
                 FROM reviews r
                 LEFT JOIN users u ON r.user_id = u.id
                 WHERE r.advisor_id = $1
                 ORDER BY review_date DESC, review_id DESC
             `,
-            [advisorId],
+            [advisorId, req.user?.id || null],
         );
 
         return res.status(200).json(results.rows);
@@ -41,6 +52,83 @@ const getReviewsByAdvisor = async (req, res) => {
         });
     }
 }
+
+const toggleReviewLike = async (req, res) => {
+    const reviewId = Number(req.params.reviewId);
+
+    if (!Number.isInteger(reviewId) || reviewId <= 0) {
+        return res.status(400).json({ message: "Invalid review ID" });
+    }
+
+    let client;
+
+    try {
+        client = await pool.connect();
+        await client.query("BEGIN");
+
+        const reviewResult = await client.query(
+            "SELECT review_id FROM reviews WHERE review_id = $1",
+            [reviewId],
+        );
+
+        if (reviewResult.rows.length === 0) {
+            await client.query("ROLLBACK");
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        const deletedLike = await client.query(
+            `
+                DELETE FROM review_likes
+                WHERE review_id = $1 AND user_id = $2
+                RETURNING review_id
+            `,
+            [reviewId, req.user.id],
+        );
+
+        const liked = deletedLike.rows.length === 0;
+
+        if (liked) {
+            await client.query(
+                `
+                    INSERT INTO review_likes (review_id, user_id)
+                    VALUES ($1, $2)
+                    ON CONFLICT (review_id, user_id) DO NOTHING
+                `,
+                [reviewId, req.user.id],
+            );
+        }
+
+        const countResult = await client.query(
+            `
+                SELECT COUNT(*)::integer AS likes
+                FROM review_likes
+                WHERE review_id = $1
+            `,
+            [reviewId],
+        );
+
+        await client.query("COMMIT");
+
+        return res.status(200).json({
+            review_id: reviewId,
+            likes: countResult.rows[0].likes,
+            liked_by_user: liked,
+        });
+    } catch (err) {
+        if (client) {
+            await client.query("ROLLBACK");
+        }
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Unable to update review like",
+        });
+    } finally {
+        if (client) {
+            client.release();
+        }
+    }
+};
 
 const createReview = async (req, res) => {
     try {
@@ -427,6 +515,7 @@ const deleteReview = async (req, res) => {
 export default {
   getReviewsByAdvisor,
   createReview,
+  toggleReviewLike,
   updateReview,
   deleteReview
 }
