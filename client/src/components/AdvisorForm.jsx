@@ -238,13 +238,13 @@ const AdvisorForm = ({ universities = [] }) => {
                             {filteredUniversities.length > 0 ? (
                                 filteredUniversities.map((university) => (
                                     <button
-                                    key={university.university_id}
-                                    type="button"
-                                    className="university-dropdown-option"
-                                    onMouseDown={(event) => event.preventDefault()}
-                                    onClick={() => handleUniversitySelect(university)}
+                                        key={university.university_id}
+                                        type="button"
+                                        className="university-dropdown-option"
+                                        onMouseDown={(event) => event.preventDefault()}
+                                        onClick={() => handleUniversitySelect(university)}
                                     >
-                                    {university.name}
+                                        {university.name}
                                     </button>
                                 ))
                             ) : (
