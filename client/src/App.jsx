@@ -26,11 +26,11 @@ const App = () => {
       element: <CreateAdvisor />
     },
     {
-      path: "/advisor/:id",
-      element: <ViewAdvisor />,
+      path: "/advisors/:id",
+      element: <ViewAdvisor /> ,
     },
     {
-      path: "/advisor/:advisorId/review",
+      path: "/advisors/:advisorId/review",
       element: <CreateReview />,
     },
   ]);

@@ -80,7 +80,7 @@ const ReviewForm = ({ advisorId }) => {
                 // replace: true (prevents accidental duplicate submissions
                 // through browser navigation by replacing current page
                 // in browder's history instead of adding a new history entry)
-            navigate(`/advisor/${advisorId}`, { replace: true })
+            navigate(`/advisors/${advisorId}`, { replace: true })
         } catch (err) {
             setError(err.message || "Unable to submit review. :(")
         } finally {

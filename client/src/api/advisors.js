@@ -58,7 +58,7 @@ export function deleteAdvisor(advisorId) {
 
 // Reviews
 export function getReviewsByAdvisor(advisorId) {
-  return request(`/api/reviews/advisor/${advisorId}`);
+  return request(`/api/reviews/advisors/${advisorId}`);
 }
 
 export function createReview(reviewData) {

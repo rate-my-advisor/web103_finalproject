@@ -179,7 +179,7 @@ const UniversityAdvisors = () => {
               <Link
                 className="advisor-card"
                 key={advisor.advisor_id}
-                to={`/advisor/${advisor.advisor_id}`}
+                to={`/advisors/${advisor.advisor_id}`}
               >
                 <div>
                   <h2>{`${advisor.first_name} ${advisor.last_name}`}</h2>

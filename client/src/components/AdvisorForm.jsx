@@ -135,7 +135,7 @@ const AdvisorForm = ({ universities = [] }) => {
             }
 
             // redirect to the newly created advisor's profile page
-            navigate(`/advisor/${createdAdvisorId}`, { replace: true })
+            navigate(`/advisors/${createdAdvisorId}`, { replace: true })
         } catch (error) {
             console.error("Unable to create advisor:", error)
 
