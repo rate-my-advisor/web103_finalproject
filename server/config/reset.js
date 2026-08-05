@@ -105,6 +105,17 @@ const resetDatabase = async () => {
             WHERE user_id IS NOT NULL;
         `);
 
+        await client.query(`
+            CREATE TABLE review_likes (
+                review_id INTEGER NOT NULL
+                    REFERENCES reviews(review_id) ON DELETE CASCADE,
+                user_id INTEGER NOT NULL
+                    REFERENCES users(id) ON DELETE CASCADE,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (review_id, user_id)
+            );
+        `);
+
         // Create trigger to recalculate advisor rating on update
         await client.query(`
             CREATE OR REPLACE FUNCTION update_advisor_rating()
