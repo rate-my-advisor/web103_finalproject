@@ -53,12 +53,11 @@ the current average rating, student reviews, and recommendation percentage.
 
 ![Advisor profile demo](client/src/assets/advisor-profile.gif)
 
-### (3) Allow users to add new advisors
+### (3) ✅ Allow users to add new advisors
 
-Planned: users will be able to add an advisor through a form when that advisor
-is not already listed. This work is still in progress in issue #19 and PR #33.
+Users can add a new advisor to a university through a form.
 
-Demo GIF pending implementation.
+![Add new advisor demo](docs/assets/make-advisor-profile.gif)
 
 ### (4) ✅ Users can create, edit, and delete their own advisor reviews
 
