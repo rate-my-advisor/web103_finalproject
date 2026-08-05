@@ -186,7 +186,6 @@ Without Docker:
 
 - The deployed GitHub OAuth flow redirects to the old auth preview callback and
   must be updated to use `https://server-bncl.onrender.com/auth/github/callback`.
-- Advisor creation is still in PR #33 and currently conflicts with `main`.
 - Persistent likes and reports are not on `main`; PRs #32 and #34 overlap and
   need to be reconciled.
 - The final feature GIFs and complete walkthrough GIF still need to be recorded.
