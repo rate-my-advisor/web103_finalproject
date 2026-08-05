@@ -1,5 +1,16 @@
+import fs from "fs";
 import "./dotenv.js";
 import { pool } from "./database.js";
+
+/*
+    Data Attribution:
+    US Universities dataset provided under MIT License by Hipo's university-domains-list repository:
+    https://github.com/Hipo/university-domains-list
+*/
+
+const usUniversities = JSON.parse(
+    fs.readFileSync(new URL("./us_universities.json", import.meta.url), "utf8")
+);
 
 /*
     pool.query --> pool is like a group of reusable db connections
@@ -20,13 +31,13 @@ const resetDatabase = async () => {
         // reminder: reviews depend on advisors/users
         //           advisors depend on universities
         await client.query(`
-            DROP TABLE IF EXISTS review_likes;
-            DROP TABLE IF EXISTS reviews;
-            DROP TABLE IF EXISTS advisors;
-            DROP TABLE IF EXISTS students;
-            DROP TABLE IF EXISTS universities;
-            DROP TABLE IF EXISTS users;
-            DROP TABLE IF EXISTS "session";
+            DROP TABLE IF EXISTS review_likes CASCADE;
+            DROP TABLE IF EXISTS reviews CASCADE;
+            DROP TABLE IF EXISTS advisors CASCADE;
+            DROP TABLE IF EXISTS students CASCADE;
+            DROP TABLE IF EXISTS universities CASCADE;
+            DROP TABLE IF EXISTS users CASCADE;
+            DROP TABLE IF EXISTS "session" CASCADE;
         `);
 
         // create unified users table (student account profile)
@@ -149,35 +160,33 @@ const resetDatabase = async () => {
             EXECUTE FUNCTION update_advisor_rating();
         `);
 
-        // Insert seed universities and advisors for instant testing
-        await client.query(`
-            INSERT INTO universities (name) VALUES
-            ('Harvard University'),
-            ('Stanford University'),
-            ('Massachusetts Institute of Technology'),
-            ('University of California, Berkeley'),
-            ('Columbia University');
+        // Bulk insert all US universities
+        const placeholders = usUniversities.map((_, i) => `($${i + 1})`).join(", ");
+        await client.query(
+            `INSERT INTO universities (name) VALUES ${placeholders} ON CONFLICT (name) DO NOTHING;`,
+            usUniversities
+        );
 
+        // Insert seed advisors mapped to their respective university
+        await client.query(`
             INSERT INTO advisors (university_id, first_name, last_name, email, department, office) VALUES
-            (1, 'Sarah', 'Conner', 'sconner@harvard.edu', 'Computer Science', 'Maxwell Dworkin 214'),
-            (1, 'David', 'Malan', 'dmalan@harvard.edu', 'Computer Science', 'Science Center 102'),
-            (2, 'Andrew', 'Ng', 'ang@stanford.edu', 'Artificial Intelligence', 'Gates Building 154'),
-            (2, 'Jennifer', 'Widom', 'jwidom@stanford.edu', 'Computer Science', 'Packard Building 202'),
-            (3, 'Gilbert', 'Strang', 'gstrang@mit.edu', 'Mathematics', 'Building 2-265'),
-            (4, 'Michael', 'Jordan', 'jordan@berkeley.edu', 'Data Science', 'Soda Hall 387'),
-            (5, 'Jeannette', 'Wing', 'jwing@columbia.edu', 'Computer Science', 'Mudd Hall 450');
+            ((SELECT university_id FROM universities WHERE name = 'Harvard University'), 'Sarah', 'Conner', 'sconner@harvard.edu', 'Computer Science', 'Maxwell Dworkin 214'),
+            ((SELECT university_id FROM universities WHERE name = 'Harvard University'), 'David', 'Malan', 'dmalan@harvard.edu', 'Computer Science', 'Science Center 102'),
+            ((SELECT university_id FROM universities WHERE name = 'Stanford University'), 'Andrew', 'Ng', 'ang@stanford.edu', 'Artificial Intelligence', 'Gates Building 154'),
+            ((SELECT university_id FROM universities WHERE name = 'Stanford University'), 'Jennifer', 'Widom', 'jwidom@stanford.edu', 'Computer Science', 'Packard Building 202'),
+            ((SELECT university_id FROM universities WHERE name = 'Massachusetts Institute of Technology'), 'Gilbert', 'Strang', 'gstrang@mit.edu', 'Mathematics', 'Building 2-265'),
+            ((SELECT university_id FROM universities WHERE name = 'University of California, Berkeley'), 'Michael', 'Jordan', 'jordan@berkeley.edu', 'Data Science', 'Soda Hall 387'),
+            ((SELECT university_id FROM universities WHERE name = 'Columbia University'), 'Jeannette', 'Wing', 'jwing@columbia.edu', 'Computer Science', 'Mudd Hall 450');
         `);
 
         // COMMIT means every query succeeded, so save all changes
         await client.query("COMMIT");
 
         console.log("✅ Database tables reset successfully");
-        console.log("✅ universities table created");
+        console.log(`✅ universities table created and prefilled with ${usUniversities.length} US universities`);
         console.log("✅ users table created");
         console.log("✅ advisors table created");
         console.log("✅ reviews table created");
-        console.log("✅ review_likes table created");
-        console.log("ℹ️ Tables are empty and ready for user input");
     } catch (error) {
         if (client) {
             // ROLLBACK means failed, undo everything since BEGIN line
