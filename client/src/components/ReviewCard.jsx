@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { deleteReview, updateReview } from "../api/advisors";
+import { deleteReview, toggleReviewLike, updateReview } from "../api/advisors";
 import "../css/ReviewCard.css";
 
 const RatingBar = ({ label, value }) => {
@@ -34,6 +34,9 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdatingLike, setIsUpdatingLike] = useState(false);
+  const [likes, setLikes] = useState(Number(review.likes) || 0);
+  const [isLiked, setIsLiked] = useState(Boolean(review.liked_by_user));
   const [error, setError] = useState("");
 
   const initialState = {
@@ -78,6 +81,25 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
   const handleReport = () => {
     setIsMenuOpen(false);
     alert("Thank you. This review has been reported.");
+  };
+
+  const handleLike = async () => {
+    if (!user) {
+      alert("Please log in to like reviews.");
+      return;
+    }
+
+    setIsUpdatingLike(true);
+
+    try {
+      const data = await toggleReviewLike(review.review_id);
+      setLikes(data.likes);
+      setIsLiked(data.liked_by_user);
+    } catch (err) {
+      alert(err.message || "Failed to update like.");
+    } finally {
+      setIsUpdatingLike(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -314,6 +336,18 @@ const ReviewCard = ({ review, onReviewDeleted, onReviewUpdated }) => {
             ) : (
               <span className="recommend-tag no">✗ Does Not Recommend</span>
             )}
+            <button
+              type="button"
+              className={`like-btn${isLiked ? " liked" : ""}`}
+              onClick={handleLike}
+              disabled={isUpdatingLike}
+              aria-pressed={isLiked}
+              aria-label={isLiked ? "Unlike this review" : "Like this review"}
+            >
+              <span aria-hidden="true">{isLiked ? "♥" : "♡"}</span>
+              {isLiked ? "Unlike" : "Like"}
+              <span className="like-count">{likes}</span>
+            </button>
           </div>
         </>
       )}

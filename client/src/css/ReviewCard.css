@@ -139,6 +139,9 @@
 }
 
 .review-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   padding-top: 0.9rem;
   border-top: 1px solid #e2e8f0;
 }
@@ -337,4 +340,42 @@
 
 .cancel-btn:hover {
   background: #e2e8f0;
+}
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #475569;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.like-btn:hover:not(:disabled),
+.like-btn.liked {
+  border-color: #e11d48;
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.like-btn:focus-visible {
+  outline: 3px solid rgba(225, 29, 72, 0.25);
+  outline-offset: 2px;
+}
+
+.like-btn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.like-count {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
 }

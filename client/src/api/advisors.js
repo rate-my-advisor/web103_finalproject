@@ -80,3 +80,9 @@ export function deleteReview(reviewId) {
     method: "DELETE",
   });
 }
+
+export function toggleReviewLike(reviewId) {
+  return request(`/api/reviews/${reviewId}/like`, {
+    method: "PATCH",
+  });
+}
