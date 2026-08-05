@@ -20,6 +20,7 @@ const resetDatabase = async () => {
         // reminder: reviews depend on advisors/users
         //           advisors depend on universities
         await client.query(`
+            DROP TABLE IF EXISTS review_likes;
             DROP TABLE IF EXISTS reviews;
             DROP TABLE IF EXISTS advisors;
             DROP TABLE IF EXISTS students;
@@ -99,6 +100,17 @@ const resetDatabase = async () => {
             WHERE user_id IS NOT NULL;
         `);
 
+        await client.query(`
+            CREATE TABLE review_likes (
+                review_id INTEGER NOT NULL
+                    REFERENCES reviews(review_id) ON DELETE CASCADE,
+                user_id INTEGER NOT NULL
+                    REFERENCES users(id) ON DELETE CASCADE,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (review_id, user_id)
+            );
+        `);
+
         // Create trigger to recalculate advisor rating on update
         await client.query(`
             CREATE OR REPLACE FUNCTION update_advisor_rating()
@@ -164,6 +176,7 @@ const resetDatabase = async () => {
         console.log("✅ users table created");
         console.log("✅ advisors table created");
         console.log("✅ reviews table created");
+        console.log("✅ review_likes table created");
         console.log("ℹ️ Tables are empty and ready for user input");
     } catch (error) {
         if (client) {
