@@ -102,7 +102,7 @@ const UniversityAdvisors = () => {
 
         {error && <p className="advisor-message">{error}</p>}
 
-        {!loading && !error && advisors.length > 0 && (
+        {!loading && !error && (
           <section className="advisor-controls" aria-label="Filter advisors">
             <label>
               <span>Search advisors</span>
@@ -143,24 +143,7 @@ const UniversityAdvisors = () => {
           </section>
         )}
 
-        {!loading && !error && advisors.length === 0 && (
-          <section className="advisor-empty-state">
-            <h2>No advisors found</h2>
-            <p>No advisor profiles are available for this university yet.</p>
-          </section>
-        )}
-
-        {!loading &&
-          !error &&
-          advisors.length > 0 &&
-          visibleAdvisors.length === 0 && (
-            <section className="advisor-empty-state">
-              <h2>No matching advisors</h2>
-              <p>Try a different search or department.</p>
-            </section>
-          )}
-
-        {!loading && !error && visibleAdvisors.length > 0 && (
+        {!loading && !error && (
           <>
             <div className="advisor-results-toolbar">
               <p className="advisor-result-count" aria-live="polite">
@@ -168,38 +151,57 @@ const UniversityAdvisors = () => {
                 {visibleAdvisors.length === 1 ? "advisor" : "advisors"}
               </p>
 
-              {/* add button to lead to advisor creation form */}
+              {/* button to lead to advisor creation form */}
               <Link to="/advisors/create" className="advisor-results-create-link">
-                  Create Advisor Profile
+                Create Advisor Profile
               </Link>
             </div>
 
-            <section className="advisor-list" aria-label="University advisors">
-              {visibleAdvisors.map((advisor) => (
-              <Link
-                className="advisor-card"
-                key={advisor.advisor_id}
-                to={`/advisors/${advisor.advisor_id}`}
-              >
-                <div>
-                  <h2>{`${advisor.first_name} ${advisor.last_name}`}</h2>
-                  <p className="advisor-email">{advisor.email}</p>
-                  <p className="advisor-department">{advisor.department}</p>
-                </div>
+            {visibleAdvisors.length > 0 ? (
+              <section className="advisor-list" aria-label="University advisors">
+                {visibleAdvisors.map((advisor) => (
+                  <Link
+                    className="advisor-card"
+                    key={advisor.advisor_id}
+                    to={`/advisors/${advisor.advisor_id}`}
+                  >
+                    <div>
+                      <h2>{`${advisor.first_name} ${advisor.last_name}`}</h2>
+                      <p className="advisor-email">{advisor.email}</p>
+                      <p className="advisor-department">{advisor.department}</p>
+                    </div>
 
-                <div
-                  className="advisor-rating"
-                  aria-label={
-                    advisor.rating == null
-                      ? "Not yet rated"
-                      : `${advisor.rating} out of 5`
-                  }
-                >
-                  {advisor.rating == null ? "Not rated" : `${advisor.rating} / 5`}
-                </div>
-              </Link>
-              ))}
-            </section>
+                    <div
+                      className="advisor-rating"
+                      aria-label={
+                        advisor.rating == null
+                          ? "Not yet rated"
+                          : `${advisor.rating} out of 5`
+                      }
+                    >
+                      {advisor.rating == null ? "Not rated" : `${advisor.rating} / 5`}
+                    </div>
+                  </Link>
+                ))}
+              </section>
+            ) : (
+              <section className="advisor-empty-state">
+                <h2>
+                  {advisors.length === 0
+                    ? "No advisors found"
+                    : "No matching advisors"}
+                </h2>
+                <p>
+                  {advisors.length === 0
+                    ? "No advisor profiles are available for this university yet."
+                    : "No advisors match your search criteria."}
+                </p>
+                <p className="advisor-empty-action">
+                  Can't find who you're looking for?{" "}
+                  <Link to="/advisors/create">Create an advisor profile</Link> to get started.
+                </p>
+              </section>
+            )}
           </>
         )}
       </main>

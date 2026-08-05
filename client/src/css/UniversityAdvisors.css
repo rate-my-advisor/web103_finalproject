@@ -128,10 +128,37 @@
 
 .advisor-empty-state,
 .advisor-message {
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   border: 1px dashed #9aa6c2;
   border-radius: 16px;
   text-align: center;
+}
+
+.advisor-empty-state h2 {
+  margin: 0 0 0.5rem;
+  color: #121526;
+  font-size: 1.5rem;
+}
+
+.advisor-empty-state p {
+  margin: 0.25rem 0;
+  color: #566079;
+}
+
+.advisor-empty-action {
+  margin-top: 1rem !important;
+  color: #30374d !important;
+  font-weight: 600;
+}
+
+.advisor-empty-action a {
+  color: #30377d;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.advisor-empty-action a:hover {
+  color: #172554;
 }
 
 @media (max-width: 800px) {
