@@ -107,7 +107,7 @@ const ViewAdvisor = () => {
             <h2>Reviews</h2>
 
             <Link
-              to={`/advisor/${id}/review`}
+              to={`/advisors/${id}/review`}
               className="create-review-link"
             >
               Write a Review

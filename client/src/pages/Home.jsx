@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import { getUniversities } from "../api/advisors";
 import "../css/Home.css";
@@ -90,8 +90,14 @@ const Home = () => {
                 ))}
               </datalist>
               <button type="submit" disabled={loading}>
-                Find advisors
+                Search
               </button>
+
+              {/* add create advisor profile button in homepage */}
+              <Link to="/advisors/create" className="create-advisor-link">
+                <span>Create</span>
+                <span>Advisor Profile</span>
+              </Link>
             </div>
             {error && (
               <p className="search-error" role="alert">

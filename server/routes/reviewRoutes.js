@@ -5,7 +5,8 @@ import { ensureAuthenticated } from "../middleware/authMiddleware.js"
 const router = express.Router()
 
 // Public endpoints (Accessible by everyone, including anonymous users)
-router.get("/advisor/:advisorId", reviewController.getReviewsByAdvisor)
+router.get("/advisors/:advisorId", reviewController.getReviewsByAdvisor)
+
 router.post("/", reviewController.createReview)
 
 // Protected endpoints (Require owner/admin auth to modify/delete)
