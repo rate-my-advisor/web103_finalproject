@@ -189,3 +189,7 @@ Without Docker:
 - Persistent likes and reports are not on `main`; PRs #32 and #34 overlap and
   need to be reconciled.
 - The final feature GIFs and complete walkthrough GIF still need to be recorded.
+
+## Attributions & Data Credits
+
+- **US Universities Data**: Sourced from the open-source [Hipo/university-domains-list](https://github.com/Hipo/university-domains-list) repository under the MIT License.

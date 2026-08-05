@@ -2,6 +2,12 @@ import fs from "fs";
 import "./dotenv.js";
 import { pool } from "./database.js";
 
+/*
+    Data Attribution:
+    US Universities dataset provided under MIT License by Hipo's university-domains-list repository:
+    https://github.com/Hipo/university-domains-list
+*/
+
 const usUniversities = JSON.parse(
     fs.readFileSync(new URL("./us_universities.json", import.meta.url), "utf8")
 );
