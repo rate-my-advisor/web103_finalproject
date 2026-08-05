@@ -169,7 +169,10 @@ const UniversityAdvisors = () => {
               </p>
 
               {/* add button to lead to advisor creation form */}
-              <Link to="/advisors/create" className="advisor-results-create-link">
+              <Link
+                to={`/advisors/create?universityId=${universityId}`}
+                className="advisor-results-create-link"
+              >
                   Create Advisor Profile
               </Link>
             </div>

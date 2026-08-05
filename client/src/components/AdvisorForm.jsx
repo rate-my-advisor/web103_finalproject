@@ -11,13 +11,20 @@ const initialFormData = {
     office: "",
 }
 
-const AdvisorForm = ({ universities = [] }) => {
+const AdvisorForm = ({ universities = [], initialUniversity = null, }) => {
     const navigate = useNavigate()
 
-    const [formData, setFormData] = useState(initialFormData)
+    const [formData, setFormData] = useState(() => ({
+        ...initialFormData,
+        university_id: initialUniversity
+            ? String(initialUniversity.university_id)
+            : "",
+    }))
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState("")
-    const [universitySearch, setUniversitySearch] = useState("")
+    const [universitySearch, setUniversitySearch] = useState(
+        () => initialUniversity?.name ?? ""
+    )
     const [isUniversityDropdownOpen, setIsUniversityDropdownOpen] = useState(false)
     // for non-existing universities, allow user to create a new uni
     const [createNewUniversity, setCreateNewUniversity] = useState(false);
@@ -108,8 +115,6 @@ const AdvisorForm = ({ universities = [] }) => {
                 throw new Error("Please complete all required fields.");
             }
 
-            setIsSubmitting(true)
-
             const advisorResponse = await fetch("/api/advisors", {
                 method: "POST",
                 headers: {
@@ -193,8 +198,6 @@ const AdvisorForm = ({ universities = [] }) => {
             university_id: "",
         }));
     };
-
-    console.log("Universities received:", universities)
 
     return (
         <form className="advisor-form" onSubmit={handleSubmit}>
